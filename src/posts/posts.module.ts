@@ -5,6 +5,6 @@ import { Search } from './posts.repository';
 
 @Module({
   controllers: [SearchController],
-  providers: [SearchService, Search]
+  providers: [SearchService, Search],
 })
-export class SearchModule {}
+export class PostModule {}

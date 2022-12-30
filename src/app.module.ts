@@ -5,10 +5,9 @@ import { AppService } from './app.service';
 import { UserModule } from './user/user.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import {Users} from './user/entity/user.entity'
-import { SearchModule } from './search/search.module';
-import { Posts } from './search/entity/post.entity';
-
+import { Users } from './user/entity/user.entity';
+import { PostModule } from './posts/posts.module';
+import { Posts } from './posts/entity/posts.entity';
 
 @Module({
   imports: [
@@ -17,18 +16,18 @@ import { Posts } from './search/entity/post.entity';
       // envFilePath: [`${__dirname}/.env`],
       envFilePath: [`.env`],
     }),
-    
+
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => {
         return {
           type: 'mysql',
-          host: configService.get('DB_HOST') ,
-          port: +configService.get<number>('DB_PORT') ,
-          username: configService.get('DB_USER') ,
-          database: configService.get('DB_NAME') ,
-          password: configService.get('DB_PASSWORD') ,
+          host: configService.get('DB_HOST'),
+          port: +configService.get<number>('DB_PORT'),
+          username: configService.get('DB_USER'),
+          database: configService.get('DB_NAME'),
+          password: configService.get('DB_PASSWORD'),
           //entities: [__dirname + '/**/*.entity{.ts,.js}'],
           entities: [Users, Posts],
           synchronize: false,
@@ -36,7 +35,7 @@ import { Posts } from './search/entity/post.entity';
       },
     }),
     UserModule,
-    SearchModule
+    PostModule,
   ],
   controllers: [AppController],
   providers: [AppService],

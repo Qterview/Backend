@@ -7,6 +7,8 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import {Users} from './user/entity/user.entity'
 import { SearchModule } from './search/search.module';
+import { Posts } from './search/entity/post.entity';
+
 
 @Module({
   imports: [
@@ -28,7 +30,7 @@ import { SearchModule } from './search/search.module';
           database: configService.get('DB_NAME') ,
           password: configService.get('DB_PASSWORD') ,
           //entities: [__dirname + '/**/*.entity{.ts,.js}'],
-          entities: [Users],
+          entities: [Users, Posts],
           synchronize: false,
         };
       },

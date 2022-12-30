@@ -1,14 +1,14 @@
 import { Controller, Get, Post } from '@nestjs/common';
-import { SearchService } from './posts.service';
+import { PostsService } from './posts.service';
 
-@Controller('search')
-export class SearchController {
+@Controller('posts')
+export class PostsController {
 
-    constructor(private readonly searchService: SearchService) {}
+    constructor(private readonly postsService: PostsService) {}
 
-    @Post()
+    @Get()
     getPost():any {
-        return this.searchService.getPost();
+        return this.postsService.getPost();
     }
     
 }

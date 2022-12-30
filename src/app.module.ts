@@ -5,9 +5,16 @@ import { AppService } from './app.service';
 import { UserModule } from './user/user.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
+<<<<<<< HEAD
 import { Users } from './user/entity/user.entity';
 import { PostModule } from './posts/posts.module';
 import { Posts } from './posts/entity/posts.entity';
+=======
+import { PostsModule } from './posts/posts.module';
+import { DataBaseConfig } from './database/DataBaseConfig'
+
+
+>>>>>>> c3e783b8ea827ab3bca7e0f91e5c446d825fb7b4
 
 @Module({
   imports: [
@@ -17,6 +24,7 @@ import { Posts } from './posts/entity/posts.entity';
       envFilePath: [`.env`],
     }),
 
+<<<<<<< HEAD
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
@@ -36,6 +44,11 @@ import { Posts } from './posts/entity/posts.entity';
     }),
     UserModule,
     PostModule,
+=======
+    TypeOrmModule.forRootAsync(DataBaseConfig),
+    // UserModule,
+    PostsModule
+>>>>>>> c3e783b8ea827ab3bca7e0f91e5c446d825fb7b4
   ],
   controllers: [AppController],
   providers: [AppService],

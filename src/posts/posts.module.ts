@@ -1,10 +1,14 @@
 import { Module } from '@nestjs/common';
-import { SearchController } from './posts.controller';
-import { SearchService } from './posts.service';
-import { Search } from './posts.repository';
+import { PostsController } from './posts.controller';
+import { PostsService } from './posts.service';
+import { TypeOrmExModule } from '../database/typeorm-ex.module';
+import { PostsRepository } from './posts.repository';
 
 @Module({
-  controllers: [SearchController],
-  providers: [SearchService, Search]
+  imports: [
+    TypeOrmExModule.forCustomRepository([PostsRepository]),
+  ],
+  controllers: [PostsController],
+  providers: [PostsService]
 })
-export class SearchModule {}
+export class PostsModule {}

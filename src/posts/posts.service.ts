@@ -2,7 +2,6 @@ import { Injectable } from '@nestjs/common';
 import { PostsRepository } from './posts.repository.js';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Posts } from '../entities/posts.entity';
-
 import { chatgpt } from '../util/chatgpt.js';
 
 

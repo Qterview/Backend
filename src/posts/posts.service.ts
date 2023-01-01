@@ -5,14 +5,12 @@ import { Posts } from '../entities/posts.entity';
 
 import { chatgpt } from '../util/chatgpt.js';
 
-
 @Injectable()
 export class PostsService {
   constructor(
     @InjectRepository(PostsRepository)
-    private postsRepository: PostsRepository,
-  ) // private chatgptService: ChatgptService,
-  {}
+    private postsRepository: PostsRepository, // private chatgptService: ChatgptService,
+  ) {}
 
   async getPost(): Promise<any> {
     // : Promise<Posts[]> {
@@ -21,8 +19,7 @@ export class PostsService {
   }
 
   async postAnswer(content: string): Promise<any> {
-
-   return chatgpt(content);
-
+    chatgpt(content);
+    return;
   }
 }

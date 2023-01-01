@@ -2,17 +2,20 @@ import * as config from 'config';
 import { ConfigService } from '@nestjs/config';
 import { ChatGPTAPIBrowser, ChatGPTAPI, getOpenAIAuth } from 'chatgpt';
 
+const configService = new ConfigService();
+
+// const api = new ChatGPTAPIBrowser({
+//   email: configService.get('OPENAI_EMAIL'),
+//   password: configService.get('OPENAI_PASSWORD'),
+// });
+
+const api = new ChatGPTAPIBrowser({
+  email: 'tmdvy3927@naver.com',
+  password: 'abcd1234!',
+});
+api.initSession();
+
 export const chatgpt = async (content: string) => {
-  const configService = new ConfigService();
-
-  // use puppeteer to bypass cloudflare (headful because of captchas)
-  const api = new ChatGPTAPIBrowser({
-    email: configService.get('OPENAI_EMAIL'),
-    password: configService.get('OPENAI_PASSWORD'),
-  });
-
-  await api.initSession();
-
   const result = await api.sendMessage(content);
   console.log(result.response);
 };

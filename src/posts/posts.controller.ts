@@ -12,7 +12,9 @@ export class PostsController {
   }
 
   @Post()
-  postAnswer(@Body() content): any {
+  postAnswer(@Body() data): any {
+    console.log('테스트');
+    const { content } = data;
     return this.postsService.postAnswer(content);
   }
 }

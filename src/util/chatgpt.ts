@@ -1,14 +1,21 @@
-import { ChatGPTAPI, getOpenAIAuth, ChatGPTAPIBrowser } from 'chatgpt';
-import dotenv from 'dotenv';
-dotenv.config();
-
-const email = process.env.OPENAI_EMAIL;
-const password = process.env.OPENAI_PASSWORD;
-
-const api = new ChatGPTAPIBrowser({ email, password });
-api.initSession();
+import * as config from 'config';
+import { ConfigService } from '@nestjs/config';
 
 export const chatgpt = async (content: string) => {
+
+  const configService = new ConfigService
+  const { ChatGPTAPI, getOpenAIAuth, ChatGPTAPIBrowser } = await import(
+    'chatgpt'
+  );
+
+  const openAIAuth = await getOpenAIAuth({
+    email: configService.get('OPENAI_EMAIL'),
+    password: configService.get('OPENAI_password')
+  })
+
+  const api = new ChatGPTAPI({ ...openAIAuth })
+  api.initSession();
+
   // send a message and wait for the response
   let res = await api.sendMessage(content);
   console.log(res.response);

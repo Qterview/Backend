@@ -1,12 +1,12 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
+import { AppController } from './app.controller.js';
+import { AppService } from './app.service.js';
 // import { ChatGPTAPIBrowser } from 'chatgpt'
-import { UserModule } from './user/user.module';
+import { UserModule } from './user/user.module.js';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { PostsModule } from './posts/posts.module';
-import { DataBaseConfig } from './database/DataBaseConfig';
+import { PostsModule } from './posts/posts.module.js';
+import { DataBaseConfig } from './database/DataBaseConfig.js';
 
 @Module({
   imports: [

@@ -1,6 +1,6 @@
 import { Controller, Get, Post, Body } from '@nestjs/common';
 import { brotliDecompressSync } from 'zlib';
-import { PostsService } from './posts.service';
+import { PostsService } from './posts.service.js';
 
 @Controller('posts')
 export class PostsController {

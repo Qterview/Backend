@@ -2,9 +2,9 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModuleAsyncOptions } from '@nestjs/typeorm';
 
 //entity
-import { Posts } from 'src/entities/posts.entity';
-import { Keywords } from 'src/entities/keyword.entity';
-import { Users } from 'src/entities/user.entity';
+import { Posts } from '../entities/posts.entity.js';
+import { Keywords } from '../entities/keyword.entity.js';
+import { Users } from '../entities/user.entity.js';
 
 export const DataBaseConfig: TypeOrmModuleAsyncOptions = {
   imports: [ConfigModule],

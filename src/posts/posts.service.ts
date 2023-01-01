@@ -9,8 +9,8 @@ export class PostsService {
   constructor(
     @InjectRepository(PostsRepository)
     private postsRepository: PostsRepository,
-    private chatgptService: ChatgptService,
-  ) {}
+  ) // private chatgptService: ChatgptService,
+  {}
 
   async getPost(): Promise<any> {
     // : Promise<Posts[]> {
@@ -19,6 +19,6 @@ export class PostsService {
   }
 
   async postAnswer(content: string): Promise<any> {
-    this.chatgptService.chatgpt(content);
+    // this.chatgptService.chatgpt(content);
   }
 }

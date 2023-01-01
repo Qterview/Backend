@@ -8,7 +8,9 @@ import { ChatgptService } from 'src/util/chatgpt';
 @Module({
   imports: [TypeOrmExModule.forCustomRepository([PostsRepository])],
   controllers: [PostsController],
-  providers: [PostsService, ChatgptService],
-  exports: [ChatgptService],
+  providers: [
+    PostsService,
+    // ChatgptService
+  ],
 })
 export class PostsModule {}

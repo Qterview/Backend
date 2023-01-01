@@ -1,20 +1,25 @@
 import * as config from 'config';
 import { ConfigService } from '@nestjs/config';
+import {ChatGPTAPIBrowser} from 'chatgpt'
 
 export const chatgpt = async (content: string) => {
-
-  const configService = new ConfigService
-  const { ChatGPTAPI, getOpenAIAuth, ChatGPTAPIBrowser } = await import(
-    'chatgpt'
-  );
-
-  const openAIAuth = await getOpenAIAuth({
+ const configService = new ConfigService
+  const api = new ChatGPTAPIBrowser({
     email: configService.get('OPENAI_EMAIL'),
-    password: configService.get('OPENAI_password')
+    password: configService.get('OPENAI_PASSWORD')
   })
+  await api.initSession()
+  // const { ChatGPTAPI, getOpenAIAuth, ChatGPTAPIBrowser } = await import(
+  //   'chatgpt'
+  // );
 
-  const api = new ChatGPTAPI({ ...openAIAuth })
-  api.initSession();
+  // const openAIAuth = await getOpenAIAuth({
+  //   email: configService.get('OPENAI_EMAIL'),
+  //   password: configService.get('OPENAI_password')
+  // })
+
+  // const api = new ChatGPTAPI({ ...openAIAuth })
+  // api.initSession();
 
   // send a message and wait for the response
   let res = await api.sendMessage(content);

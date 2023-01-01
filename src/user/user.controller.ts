@@ -7,6 +7,6 @@ export class UserController {
 
   @Post()
   signup(): string {
-    return this.userService.getTest();
+    return this.userService.signup();
   }
 }

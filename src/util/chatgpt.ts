@@ -8,19 +8,20 @@ const password = process.env.OPENAI_PASSWORD;
 const api = new ChatGPTAPIBrowser({ email, password });
 api.initSession();
 
-const chatgpt = async (content: string) => {
-  // 메세지 전송
-  let res = await api.sendMessage(content);
-  console.log(res.response);
+export class ChatgptService {
+  chatgpt = async (content: string) => {
+    // 메세지 전송
+    let res = await api.sendMessage(content);
+    console.log(res.response);
 
-  // // 메세지 전송
-  // res = await api.sendMessage('Can you expand on that?', {
-  //   conversationId: res.conversationId,
-  //   parentMessageId: res.messageId,
-  // });
-  // console.log(res.response);
-};
-export { chatgpt };
+    // // 메세지 전송
+    // res = await api.sendMessage('Can you expand on that?', {
+    //   conversationId: res.conversationId,
+    //   parentMessageId: res.messageId,
+    // });
+    // console.log(res.response);
+  };
+}
 
 //밸런싱(요청 분할)
 // export const chatgpt = (answer: string) => {

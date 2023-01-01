@@ -1,41 +1,21 @@
 import * as config from 'config';
 import { ConfigService } from '@nestjs/config';
-import {ChatGPTAPIBrowser} from 'chatgpt'
+import { ChatGPTAPIBrowser, ChatGPTAPI, getOpenAIAuth } from 'chatgpt';
 
 export const chatgpt = async (content: string) => {
- const configService = new ConfigService
+  const configService = new ConfigService();
+
+  // use puppeteer to bypass cloudflare (headful because of captchas)
   const api = new ChatGPTAPIBrowser({
     email: configService.get('OPENAI_EMAIL'),
-    password: configService.get('OPENAI_PASSWORD')
-  })
-  await api.initSession()
-  // const { ChatGPTAPI, getOpenAIAuth, ChatGPTAPIBrowser } = await import(
-  //   'chatgpt'
-  // );
+    password: configService.get('OPENAI_PASSWORD'),
+  });
 
-  // const openAIAuth = await getOpenAIAuth({
-  //   email: configService.get('OPENAI_EMAIL'),
-  //   password: configService.get('OPENAI_password')
-  // })
+  await api.initSession();
 
-  // const api = new ChatGPTAPI({ ...openAIAuth })
-  // api.initSession();
-
-
-  // send a message and wait for the response
-  let res = await api.sendMessage(content);
-  console.log(res.response);
-
-
-
-    // // 메세지 전송
-    // res = await api.sendMessage('Can you expand on that?', {
-    //   conversationId: res.conversationId,
-    //   parentMessageId: res.messageId,
-    // });
-    // console.log(res.response);
-  };
-}
+  const result = await api.sendMessage(content);
+  console.log(result.response);
+};
 
 //밸런싱(요청 분할)
 // export const chatgpt = (answer: string) => {

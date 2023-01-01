@@ -13,15 +13,25 @@ const api = new ChatGPTAPIBrowser({
   email: 'tmdvy3927@naver.com',
   password: 'abcd1234!',
 });
+
 api.initSession();
+const contents = [];
 
 export const chatgpt = async (content: string) => {
-  const result = await api.sendMessage(content);
-  console.log(result.response);
+  if (contents.length) {
+    contents.push(content);
+    return;
+  }
+  contents.push(content);
+  while (contents.length) {
+    const result = await api.sendMessage(contents[0]);
+    console.log(result.response);
+    contents.shift();
+  }
 };
 
 //밸런싱(요청 분할)
-// export const chatgpt = (answer: string) => {
+// export const chatgpt2 = (answer: string) => {
 //   const answers: string[][] = [[], [], []];
 //   const arr = [answers[0].length, answers[1].length, answers[2].length];
 //   const min = Math.min(...arr);

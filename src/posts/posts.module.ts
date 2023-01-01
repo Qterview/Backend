@@ -7,6 +7,9 @@ import { PostsRepository } from './posts.repository.js';
 @Module({
   imports: [TypeOrmExModule.forCustomRepository([PostsRepository])],
   controllers: [PostsController],
-  providers: [PostsService],
+  providers: [
+    PostsService,
+    // ChatgptService
+  ],
 })
 export class PostsModule {}

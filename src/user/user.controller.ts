@@ -6,7 +6,7 @@ export class UserController {
   constructor(private readonly userService: UserService) {}
 
   @Post()
-  signup(): string {
-    return this.userService.getTest();
+  signup() {
+    // return this.userService.signup();
   }
 }

@@ -1,24 +1,24 @@
-import * as config from 'config';
-import { ConfigService } from '@nestjs/config';
-import { ChatGPTAPIBrowser, ChatGPTAPI, getOpenAIAuth } from 'chatgpt';
+// import * as config from 'config';
+// import { ConfigService } from '@nestjs/config';
+// import { ChatGPTAPIBrowser, ChatGPTAPI, getOpenAIAuth } from 'chatgpt';
 
-const configService = new ConfigService();
+// const configService = new ConfigService();
 
 // const api = new ChatGPTAPIBrowser({
 //   email: configService.get('OPENAI_EMAIL'),
 //   password: configService.get('OPENAI_PASSWORD'),
 // });
 
-const api = new ChatGPTAPIBrowser({
-  email: 'tmdvy3927@naver.com',
-  password: 'abcd1234!',
-});
-api.initSession();
+// const api = new ChatGPTAPIBrowser({
+//   email: 'tmdvy3927@naver.com',
+//   password: 'abcd1234!',
+// });
+// api.initSession();
 
-export const chatgpt = async (content: string) => {
-  const result = await api.sendMessage(content);
-  console.log(result.response);
-};
+// export const chatgpt = async (content: string) => {
+//   const result = await api.sendMessage(content);
+//   console.log(result.response);
+// };
 
 //밸런싱(요청 분할)
 // export const chatgpt = (answer: string) => {

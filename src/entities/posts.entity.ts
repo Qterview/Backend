@@ -9,7 +9,7 @@ import {
   ManyToOne,
 } from 'typeorm';
 
-import { Keywords } from './keyword.entity';
+import { Keywords } from './keyword.entity.js';
 
 @Entity()
 @Unique(['postId'])
@@ -23,6 +23,6 @@ export class Posts extends BaseEntity {
   @Column({ length: 500 })
   content: string;
 
-  @OneToMany(() => Keywords, (keyword) => keyword.post)
-  keywords: Keywords[];
+  // @OneToMany(() => Keywords, (keyword) => keyword.post)
+  // keywords: Keywords[];
 }

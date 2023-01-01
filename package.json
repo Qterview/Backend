@@ -5,6 +5,7 @@
   "author": "",
   "private": true,
   "license": "UNLICENSED",
+  "type": "module",
   "scripts": {
     "prebuild": "rimraf dist",
     "build": "nest build",
@@ -26,6 +27,7 @@
     "@nestjs/platform-express": "^9.0.0",
     "@nestjs/typeorm": "^9.0.1",
     "@types/dotenv-safe": "^8.1.2",
+    "config": "^3.3.8",
     "dotenv": "^16.0.3",
     "dotenv-safe": "^8.2.0",
     "mysql2": "^2.3.3",

@@ -1,9 +1,10 @@
 import { Module } from '@nestjs/common';
-import { PostsController } from './posts.controller';
-import { PostsService } from './posts.service';
-import { TypeOrmExModule } from '../database/typeorm-ex.module';
-import { PostsRepository } from './posts.repository';
-import { ChatgptService } from 'src/util/chatgpt';
+
+import { PostsController } from './posts.controller.js';
+import { PostsService } from './posts.service.js';
+import { TypeOrmExModule } from '../database/typeorm-ex.module.js';
+import { PostsRepository } from './posts.repository.js';
+
 
 @Module({
   imports: [TypeOrmExModule.forCustomRepository([PostsRepository])],

@@ -1,18 +1,32 @@
-import { ChatGPTAPI, getOpenAIAuth, ChatGPTAPIBrowser } from 'chatgpt';
-import dotenv from 'dotenv';
-dotenv.config();
+import * as config from 'config';
+import { ConfigService } from '@nestjs/config';
+import {ChatGPTAPIBrowser} from 'chatgpt'
 
-const email = process.env.OPENAI_EMAIL;
-const password = process.env.OPENAI_PASSWORD;
+export const chatgpt = async (content: string) => {
+ const configService = new ConfigService
+  const api = new ChatGPTAPIBrowser({
+    email: configService.get('OPENAI_EMAIL'),
+    password: configService.get('OPENAI_PASSWORD')
+  })
+  await api.initSession()
+  // const { ChatGPTAPI, getOpenAIAuth, ChatGPTAPIBrowser } = await import(
+  //   'chatgpt'
+  // );
 
-const api = new ChatGPTAPIBrowser({ email, password });
-api.initSession();
+  // const openAIAuth = await getOpenAIAuth({
+  //   email: configService.get('OPENAI_EMAIL'),
+  //   password: configService.get('OPENAI_password')
+  // })
 
-export class ChatgptService {
-  chatgpt = async (content: string) => {
-    // 메세지 전송
-    let res = await api.sendMessage(content);
-    console.log(res.response);
+  // const api = new ChatGPTAPI({ ...openAIAuth })
+  // api.initSession();
+
+
+  // send a message and wait for the response
+  let res = await api.sendMessage(content);
+  console.log(res.response);
+
+
 
     // // 메세지 전송
     // res = await api.sendMessage('Can you expand on that?', {

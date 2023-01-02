@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { PostsRepository } from './posts.repository.js';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Posts } from '../entities/posts.entity';
+import { Posts } from '../entities/posts.entity.js';
 
 import { MyGPT } from '../util/chatgpt.js';
 
@@ -19,9 +19,14 @@ export class PostsService {
     // return 'test'
   }
 
-  async search(content: string) {
-    const api = global.GPTAPI;
-    this.myGPT.searchGPT(api, content);
-    return;
+  async search(searchData: string) {
+    return searchData;
+  }
+
+  async post(title: string, content: string) {
+    const post = new Posts();
+    post.title = title;
+    post.content = content;
+    await this.postsRepository.save(post);
   }
 }

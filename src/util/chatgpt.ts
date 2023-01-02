@@ -1,11 +1,12 @@
 import { Module, Injectable } from '@nestjs/common';
 import { ChatGPTAPIBrowser } from 'chatgpt';
 import { resolve } from 'path';
+import { PostsService } from '../posts/posts.service.js';
 
 const contents = [];
-
-@Injectable()
 export class MyGPT {
+  constructor(private postsService?: PostsService) {}
+
   GPTAPI: ChatGPTAPIBrowser;
 
   async createAPI(
@@ -45,10 +46,13 @@ export class MyGPT {
       return;
     }
     contents.push(content);
+
     while (contents.length) {
       const result = await api.sendMessage(contents[0]);
-      console.log(result.response);
       contents.shift();
+      const answer = result.response;
+      await this.postsService.post(content, answer);
+      if (!contents.length) console.log('작업이 비었습니다.');
     }
     return;
   }

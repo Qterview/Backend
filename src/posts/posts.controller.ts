@@ -11,8 +11,11 @@ export class PostsController {
     return this.postsService.getPost();
   }
 
+  @Post()
+  createPost(@Body('content') content) {}
+
   @Post('search')
-  search(@Body('content') content: string) {
-    return this.postsService.search(content);
+  search(@Body('searchData') searchData: string) {
+    return this.postsService.search(searchData);
   }
 }

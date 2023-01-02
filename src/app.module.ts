@@ -1,6 +1,4 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller.js';
-import { AppService } from './app.service.js';
 // import { ChatGPTAPIBrowser } from 'chatgpt'
 import { UserModule } from './user/user.module.js';
 import { ConfigModule, ConfigService } from '@nestjs/config';
@@ -22,7 +20,7 @@ import { DataBaseConfig } from './database/DataBaseConfig.js';
     // UserModule,
     PostsModule,
   ],
-  controllers: [AppController],
-  providers: [AppService],
+  controllers: [],
+  providers: [],
 })
 export class AppModule {}

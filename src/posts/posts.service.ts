@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { PostsRepository } from './posts.repository.js';
 import { InjectRepository } from '@nestjs/typeorm';
+import { Like } from 'typeorm';
 import { Posts } from '../entities/posts.entity';
 import { MyGPT } from '../util/chatgpt.js';
 
@@ -27,17 +28,23 @@ export class PostsService {
   }
 
   // 게시글 검색
-  async search(content: string) {
-    const api = global.GPTAPI;
-    this.myGPT.searchGPT(api, content);
+  async search(content?: string) : Promise<Posts[]> {
+    
+    let searchResult : Posts[] = await this.postsRepository.findBy({
+      
+         title : Like(`%${content}%`)
+      
+    })
 
-    return;
+    console.log(searchResult)
+
+    return searchResult;
   }
 
   // 게시글 등록
   async createPost(content: string) {
-    const api = global.GPTAPI;
-    let GPTresult = this.myGPT.searchGPT(api, content);  
+    // const api = global.GPTAPI;
+    // let GPTresult = this.myGPT.searchGPT(api, content);  
 
     // // 큐 + 스케줄러 
     // this.queue.push(content)
@@ -68,6 +75,6 @@ export class PostsService {
     //   this.SIGN = 0
     // }
     // 
-  // }
+  // } 
 
 }

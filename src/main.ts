@@ -13,7 +13,7 @@ async function bootstrap() {
   myGPT.createAPI(
     configService.get<string>('OPENAI_EMAIL'),
     configService.get<string>('OPENAI_PASSWORD'),
-    // configService.get<string>('NOPECHAKEY'),
+    configService.get<string>('NOPECHAKEY'),
   );
 
   await app.listen(3000);

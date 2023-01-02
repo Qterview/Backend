@@ -5,13 +5,16 @@ import { PostsService } from './posts.service.js';
 import { TypeOrmExModule } from '../database/typeorm-ex.module.js';
 import { PostsRepository } from './posts.repository.js';
 import { MyGPT } from '../util/chatgpt.js';
-
+// import {Queue} from '../util/queue.js'
 
 @Module({
   imports: [
     TypeOrmExModule.forCustomRepository([PostsRepository]),
   ],
   controllers: [PostsController],
-  providers: [PostsService, MyGPT],
+  providers: [PostsService,
+    MyGPT,
+    // Queue
+  ],
 })
 export class PostsModule {}

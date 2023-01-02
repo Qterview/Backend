@@ -15,4 +15,10 @@ export class PostsController {
   search(@Body('content') content: string) {
     return this.postsService.search(content);
   }
+
+  @Post('createPost')
+  createPost(@Body('content') content:string){
+    return this.postsService.createPost(content);
+  }
+
 }

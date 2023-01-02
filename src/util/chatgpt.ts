@@ -40,16 +40,28 @@ export class MyGPT {
   }
 
   async searchGPT(api: ChatGPTAPIBrowser, content: string) {
-    if (contents.length) {
+    try {
+      
+      if (contents.length) {
+        contents.push(content);
+        return;
+      }
       contents.push(content);
-      return;
-    }
-    contents.push(content);
-    while (contents.length) {
-      const result = await api.sendMessage(contents[0]);
-      console.log(result.response);
-      contents.shift();
-    }
-    return;
+
+      // 미인증 상황에 요청이 들어오는 경우 배열에 저장만하고 리턴
+      if(typeof global.GPTAPI === 'undefined') return
+
+      while (contents.length) {
+        const result = await api.sendMessage(contents[0]);
+        console.log(result.response);
+        contents.shift();
+      }  
+
+    } catch (error) {
+      console.log(error)
+    } 
+
+    // 큐 + 스케줄러 
+    // return await api.sendMessage(content);
   }
 }

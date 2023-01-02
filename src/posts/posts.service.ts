@@ -3,13 +3,14 @@ import { PostsRepository } from './posts.repository.js';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Posts } from '../entities/posts.entity';
 
-import { chatgpt } from '../util/chatgpt.js';
+import { MyGPT } from '../util/chatgpt.js';
 
 @Injectable()
 export class PostsService {
   constructor(
     @InjectRepository(PostsRepository)
-    private postsRepository: PostsRepository, // private chatgptService: ChatgptService,
+    private postsRepository: PostsRepository,
+    private myGPT: MyGPT,
   ) {}
 
   async getPost(): Promise<any> {
@@ -18,8 +19,9 @@ export class PostsService {
     // return 'test'
   }
 
-  async postAnswer(content: string): Promise<any> {
-    chatgpt(content);
+  async search(content: string) {
+    const api = global.GPTAPI;
+    this.myGPT.searchGPT(api, content);
     return;
   }
 }

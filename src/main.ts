@@ -1,13 +1,12 @@
+import { ConfigService } from '@nestjs/config';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module.js';
-import { MyGPT } from './util/gpt.js';
-import { ConfigService } from '@nestjs/config';
+import { MyGPT } from './util/chatgpt.js';
 
 const myGPT = new MyGPT();
-global.GPTAPI = myGPT.GPTAPI;
 
 async function bootstrap() {
-  let configService =new ConfigService();
+  let configService = new ConfigService();
   const app = await NestFactory.create(AppModule);
 
   // gpt에 사용되는 api 생성

@@ -11,10 +11,8 @@ export class PostsController {
     return this.postsService.getPost();
   }
 
-  @Post()
-  postAnswer(@Body() data): any {
-    console.log('테스트');
-    const { content } = data;
-    return this.postsService.postAnswer(content);
+  @Post('search')
+  search(@Body('content') content: string) {
+    return this.postsService.search(content);
   }
 }

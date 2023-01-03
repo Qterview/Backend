@@ -2,9 +2,10 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Like } from 'typeorm';
 import { MyGPT } from '../util/chatgpt.js';
-import { PostsRepository } from './posts.repository.js';
-import { Posts } from '../entities/posts.entity.js';
-import { connect } from 'http2';
+import { PostsRepository, KeywordsRepository } from './posts.repository.js';
+import { Keywords, Posts } from '../entities/posts.entity.js';
+import { HttpService } from '@nestjs/axios';
+import { firstValueFrom } from 'rxjs';
 
 // import {Queue} from '../util/queue.js'
 // import { Cron } from '@nestjs/schedule';
@@ -14,12 +15,11 @@ export class PostsService {
   private SIGN: number;
   constructor(
     @InjectRepository(PostsRepository)
-    public postsRepository: PostsRepository,
-    private myGPT: MyGPT, // 큐 + 스케줄러 // private queue : Queue,
-  ) {
-    // 큐 + 스케줄러
-    // this.SIGN = 0;
-  }
+    private postsRepository: PostsRepository,
+    @InjectRepository(KeywordsRepository)
+    private keywordsRepository: KeywordsRepository,
+    private readonly httpService: HttpService,
+  ) {}
 
   async getPost(): Promise<any> {
     // : Promise<Posts[]> {
@@ -53,12 +53,23 @@ export class PostsService {
         const result = await global.GPTAPI.sendMessage(question);
 
         console.log(result.response);
-
+        const answer = result.response;
         const post = new Posts();
+        const keywords = new Keywords();
         post.title = question;
-        post.content = result.response;
-        await this.postsRepository.save(post);
+        post.content = answer;
         contents.shift();
+        const PostCreate = await this.postsRepository.save(post);
+        //키워드 추출 요청후 DB에 저장
+        // const payload = { data: answer };
+        // const { data } = await firstValueFrom(
+        //   this.httpService.post('http://localhost:5000/keybert', payload),
+        // );
+        // const keyword: string[] = data.keyword;
+        // keyword.forEach((keyword) => {
+        //   keywords.postId = PostCreate.postId;
+        //   keywords.keyword = keyword;
+        // });
       }
     } catch (error) {
       console.log(error);

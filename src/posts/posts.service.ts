@@ -1,14 +1,9 @@
 import { Injectable } from '@nestjs/common';
-import { PostsRepository } from './posts.repository.js';
 import { InjectRepository } from '@nestjs/typeorm';
-<<<<<<< HEAD
-import { Posts } from '../entities/posts.entity.js';
-
-=======
 import { Like } from 'typeorm';
-import { Posts } from '../entities/posts.entity';
->>>>>>> d2988ae19a2cb28a4908a94961b9db7d7db3fee4
 import { MyGPT } from '../util/chatgpt.js';
+import { PostsRepository } from './posts.repository.js';
+import { Posts } from '../entities/posts.entity.js';
 
 // import {Queue} from '../util/queue.js'
 // import { Cron } from '@nestjs/schedule';
@@ -19,11 +14,9 @@ export class PostsService {
   constructor(
     @InjectRepository(PostsRepository)
     private postsRepository: PostsRepository,
-    private myGPT: MyGPT,
-    // 큐 + 스케줄러 
-    // private queue : Queue,
-    ) {
-    // 큐 + 스케줄러 
+    private myGPT: MyGPT, // 큐 + 스케줄러 // private queue : Queue,
+  ) {
+    // 큐 + 스케줄러
     // this.SIGN = 0;
   }
 
@@ -32,66 +25,56 @@ export class PostsService {
     return this.postsRepository.find({});
   }
 
-<<<<<<< HEAD
-  async search(searchData: string) {
-    return searchData;
-  }
-
-  async post(title: string, content: string) {
-    const post = new Posts();
-    post.title = title;
-    post.content = content;
-    await this.postsRepository.save(post);
-=======
   // 게시글 검색
-  async search(content?: string) : Promise<Posts[]> {
-    
-    let searchResult : Posts[] = await this.postsRepository.findBy({
-      
-         title : Like(`%${content}%`)
-      
-    })
+  async search(content?: string): Promise<Posts[]> {
+    let searchResult: Posts[] = await this.postsRepository.findBy({
+      title: Like(`%${content}%`),
+    });
 
-    console.log(searchResult)
+    console.log(searchResult);
 
     return searchResult;
   }
 
-  // 게시글 등록
-  async createPost(content: string) {
-    // const api = global.GPTAPI;
-    // let GPTresult = this.myGPT.searchGPT(api, content);  
-
-    // // 큐 + 스케줄러 
-    // this.queue.push(content)
-    return;
->>>>>>> d2988ae19a2cb28a4908a94961b9db7d7db3fee4
+  async createPost(question: string) {
+    const api = global.GPTAPI;
+    this.myGPT.send(api, question);
+    return '질문 등록 요청이 완료되었습니다.';
   }
 
-  // 큐 + 스케줄러 
+  // 큐와 스케줄을 이용한 게시글 등록
+  // async createPost(content: string) {
+  // const api = global.GPTAPI;
+  // let GPTresult = this.myGPT.searchGPT(api, content);
+
+  // // 큐 + 스케줄러
+  // this.queue.push(content)
+  // return;
+  // }
+
+  // 큐 + 스케줄러
   // @Cron('* * * * * *')
   // async handleCron() :Promise<void> {
-    // try {
-    //   if(this.queue.size && this.SIGN !== 1 && typeof global.GPTAPI !== 'undefined'){
-    //     console.log('::::::::::> 데이터 작업 시작');
-    //     this.SIGN = 1 // 스케쥴러가 접근 못하게 막음
-    //     let data : string | number = this.queue.pop();
-        
-    //     if(typeof data === 'string'){
-    //       let result_GPT = await this.myGPT.searchGPT(global.GPTAPI,data);
-    //       console.log(result_GPT); // DB 작업
-    //       this.SIGN = 0
-    //     } 
-    //     console.log('::::::::::> 데이터 작업 끝');
-    //   }else{
-    //     // console.log(console.log(global.GPTAPI))
-    //     console.log('-')
-    //   }
-    // } catch (error) {
-    //   console.log(error)
-    //   this.SIGN = 0
-    // }
-    // 
-  // } 
+  // try {
+  //   if(this.queue.size && this.SIGN !== 1 && typeof global.GPTAPI !== 'undefined'){
+  //     console.log('::::::::::> 데이터 작업 시작');
+  //     this.SIGN = 1 // 스케쥴러가 접근 못하게 막음
+  //     let data : string | number = this.queue.pop();
 
+  //     if(typeof data === 'string'){
+  //       let result_GPT = await this.myGPT.searchGPT(global.GPTAPI,data);
+  //       console.log(result_GPT); // DB 작업
+  //       this.SIGN = 0
+  //     }
+  //     console.log('::::::::::> 데이터 작업 끝');
+  //   }else{
+  //     // console.log(console.log(global.GPTAPI))
+  //     console.log('-')
+  //   }
+  // } catch (error) {
+  //   console.log(error)
+  //   this.SIGN = 0
+  // }
+  //
+  // }
 }

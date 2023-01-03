@@ -1,13 +1,18 @@
 import { Module, Injectable } from '@nestjs/common';
 import { ChatGPTAPIBrowser } from 'chatgpt';
 import { resolve } from 'path';
-import { PostsService } from '../posts/posts.service.js';
+import { Posts } from '../entities/posts.entity.js';
+import { InjectRepository } from '@nestjs/typeorm';
+import { PostsRepository } from '../posts/posts.repository.js';
 
 const contents = [];
 export class MyGPT {
-  constructor(private postsService?: PostsService) {}
-
   GPTAPI: ChatGPTAPIBrowser;
+
+  constructor(
+    @InjectRepository(PostsRepository)
+    private postsRepository?: PostsRepository,
+  ) {}
 
   async createAPI(
     email: string,
@@ -44,13 +49,13 @@ export class MyGPT {
     }
   }
 
-  async searchGPT(api: ChatGPTAPIBrowser, content: string) {
+  async send(api: ChatGPTAPIBrowser, question: string) {
     try {
       if (contents.length) {
-        contents.push(content);
+        contents.push(question);
         return;
       }
-      contents.push(content);
+      contents.push(question);
 
       // 미인증 상황에 요청이 들어오는 경우 배열에 저장만하고 리턴
       if (typeof global.GPTAPI === 'undefined') return;
@@ -58,6 +63,10 @@ export class MyGPT {
       while (contents.length) {
         const result = await api.sendMessage(contents[0]);
         console.log(result.response);
+        const post = new Posts();
+        post.title = question;
+        post.content = result.response;
+        await this.postsRepository.save(post);
         contents.shift();
       }
     } catch (error) {

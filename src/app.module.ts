@@ -5,6 +5,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { PostsModule } from './posts/posts.module.js';
 import { DataBaseConfig } from './database/DataBaseConfig.js';
+
 // import { ScheduleModule } from '@nestjs/schedule';
 
 @Module({

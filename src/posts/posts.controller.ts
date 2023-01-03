@@ -1,5 +1,4 @@
 import { Controller, Get, Post, Body, Query, Param } from '@nestjs/common';
-import { brotliDecompressSync } from 'zlib';
 import { PostsService } from './posts.service.js';
 import { Posts } from '../entities/posts.entity';
 
@@ -13,13 +12,12 @@ export class PostsController {
   }
 
   @Get('search')
-  search(@Query('content') content: string) : Promise<Posts[]> {
+  search(@Query('content') content: string): Promise<Posts[]> {
     return this.postsService.search(content);
   }
 
-  @Post('createPost')
-  createPost(@Body('content') content:string){
-    return this.postsService.createPost(content);
+  @Post()
+  createPost(@Body('question') question: string) {
+    return this.postsService.createPost(question);
   }
-
 }

@@ -4,6 +4,7 @@ import { Like } from 'typeorm';
 import { MyGPT } from '../util/chatgpt.js';
 import { PostsRepository } from './posts.repository.js';
 import { Posts } from '../entities/posts.entity.js';
+import { connect } from 'http2';
 
 // import {Queue} from '../util/queue.js'
 // import { Cron } from '@nestjs/schedule';
@@ -13,7 +14,7 @@ export class PostsService {
   private SIGN: number;
   constructor(
     @InjectRepository(PostsRepository)
-    private postsRepository: PostsRepository,
+    public postsRepository: PostsRepository,
     private myGPT: MyGPT, // 큐 + 스케줄러 // private queue : Queue,
   ) {
     // 큐 + 스케줄러
@@ -37,9 +38,14 @@ export class PostsService {
   }
 
   async createPost(question: string) {
-    const api = global.GPTAPI;
-    this.myGPT.send(api, question);
-    return '질문 등록 요청이 완료되었습니다.';
+    return this.myGPT.send(question);
+  }
+
+  async savePost(title: string, content: string) {
+    const post = new Posts();
+    post.title = title;
+    post.content = content;
+    await this.postsRepository.save(post);
   }
 
   // 큐와 스케줄을 이용한 게시글 등록

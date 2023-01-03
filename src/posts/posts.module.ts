@@ -8,13 +8,13 @@ import { MyGPT } from '../util/chatgpt.js';
 // import {Queue} from '../util/queue.js'
 
 @Module({
-  imports: [
-    TypeOrmExModule.forCustomRepository([PostsRepository]),
-  ],
+  imports: [TypeOrmExModule.forCustomRepository([PostsRepository])],
   controllers: [PostsController],
-  providers: [PostsService,
+  providers: [
+    PostsService,
     MyGPT,
     // Queue
   ],
+  exports: [PostsService],
 })
 export class PostsModule {}

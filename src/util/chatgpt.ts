@@ -4,14 +4,18 @@ import { resolve } from 'path';
 import { Posts } from '../entities/posts.entity.js';
 import { InjectRepository } from '@nestjs/typeorm';
 import { PostsRepository } from '../posts/posts.repository.js';
+import { PostsService } from '../posts/posts.service.js';
 
-const contents = [];
+const contents: string[] = [];
+let connect = false;
+let API: ChatGPTAPIBrowser;
+
 export class MyGPT {
   GPTAPI: ChatGPTAPIBrowser;
 
   constructor(
     @InjectRepository(PostsRepository)
-    private postsRepository?: PostsRepository,
+    public postsRepository?: PostsRepository,
   ) {}
 
   async createAPI(
@@ -30,8 +34,9 @@ export class MyGPT {
 
         await api.initSession();
         console.log('GPT API 연결 완료 !');
-
-        global.GPTAPI = api;
+        connect = true;
+        API = api;
+        // if (contents.length) this.work();
       } else {
         // 수동
         const api = new ChatGPTAPIBrowser({
@@ -41,39 +46,66 @@ export class MyGPT {
 
         await api.initSession();
         console.log('GPT API 연결 완료 !');
+        connect = true;
+        API = api;
 
-        global.GPTAPI = api;
+        // if (contents.length) this.work();
       }
     } catch (error) {
       console.log(error);
     }
   }
 
-  async send(api: ChatGPTAPIBrowser, question: string) {
+  async send(question: string) {
     try {
-      if (contents.length) {
+      // 미인증 상황에 요청이 들어오거나 작업 처리중 상태 이면 배열에 저장만하고 리턴
+      if (!connect) {
+        return 'API준비중 입니다. 잠시후 다시 시도해 주세요';
+      }
+      if (contents.length || !connect) {
         contents.push(question);
-        return;
+        return '질문 등록 요청 성공';
       }
       contents.push(question);
-
-      // 미인증 상황에 요청이 들어오는 경우 배열에 저장만하고 리턴
-      if (typeof global.GPTAPI === 'undefined') return;
-
+      console.log('되나?');
       while (contents.length) {
-        const result = await api.sendMessage(contents[0]);
+        const question = contents[0];
+        const result = await API.sendMessage(question);
         console.log(result.response);
+        const content = result.response;
         const post = new Posts();
         post.title = question;
-        post.content = result.response;
+        post.content = content;
         await this.postsRepository.save(post);
         contents.shift();
+        console.log(
+          `messageId:${result.messageId},conversationId:${result.conversationId}`,
+        );
       }
     } catch (error) {
       console.log(error);
     }
 
-    // 큐 + 스케줄러
+    // 큐 + 스케줄러방식
     // return await api.sendMessage(content);
   }
+
+  //chatGPT작업
+  // async work() {
+  //   console.log('되나?2');
+  //   while (contents.length) {
+  //     const question = contents[0];
+  //     console.log(question);
+  //     console.log('this');
+  //     console.log(this);
+  //     const result = await API.sendMessage(question);
+  //     console.log(result.response);
+  //     const content = result.response;
+  //     await this.postsService.savePost(question, content);
+  //     contents.shift();
+  //     console.log(
+  //       `messageId:${result.messageId},conversationId:${result.conversationId}`,
+  //     );
+  //   }
+  // }
 }

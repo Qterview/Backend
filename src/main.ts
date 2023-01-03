@@ -7,6 +7,7 @@ async function bootstrap() {
   let configService = new ConfigService();
   const app = await NestFactory.create(AppModule);
   const myGPT = new MyGPT();
+
   // gpt에 사용되는 api 생성
   myGPT.createAPI(
     configService.get<string>('OPENAI_EMAIL'),

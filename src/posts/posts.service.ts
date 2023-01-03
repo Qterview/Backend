@@ -8,7 +8,7 @@ import { connect } from 'http2';
 
 // import {Queue} from '../util/queue.js'
 // import { Cron } from '@nestjs/schedule';
-
+const contents: string[] = [];
 @Injectable()
 export class PostsService {
   private SIGN: number;
@@ -38,15 +38,37 @@ export class PostsService {
   }
 
   async createPost(question: string) {
-    return this.myGPT.send(question);
+    try {
+      // 미인증 상황에 요청이 들어오거나 작업 처리중 상태 이면 배열에 저장만하고 리턴
+      if (contents.length || typeof global.GPTAPI === 'undefined') {
+        contents.push(question);
+        return;
+      }
+
+      contents.push(question);
+
+      //배열에 있는 작업 처리
+      while (contents.length) {
+        const question = contents[0];
+        const result = await global.GPTAPI.sendMessage(question);
+
+        console.log(result.response);
+
+        const post = new Posts();
+        post.title = question;
+        post.content = result.response;
+        await this.postsRepository.save(post);
+        contents.shift();
+      }
+    } catch (error) {
+      console.log(error);
+    }
+
+    // 큐 + 스케줄러방식
+    // return await api.sendMessage(content);
   }
 
-  async savePost(title: string, content: string) {
-    const post = new Posts();
-    post.title = title;
-    post.content = content;
-    await this.postsRepository.save(post);
-  }
+  async savePost(title: string, content: string) {}
 
   // 큐와 스케줄을 이용한 게시글 등록
   // async createPost(content: string) {

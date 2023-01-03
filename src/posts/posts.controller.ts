@@ -18,6 +18,7 @@ export class PostsController {
 
   @Post()
   createPost(@Body('question') question: string) {
-    return this.postsService.createPost(question);
+    this.postsService.createPost(question);
+    return '질문 등록 요청 완료';
   }
 }

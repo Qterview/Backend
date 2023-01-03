@@ -39,8 +39,8 @@ export class PostsService {
 
   async createPost(question: string) {
     try {
-      // 미인증 상황에 요청이 들어오거나 작업 처리중 상태 이면 배열에 저장만하고 리턴
-      if (contents.length || typeof global.GPTAPI === 'undefined') {
+      // 작업 처리중 상태 이면 배열에 저장만하고 리턴
+      if (contents.length) {
         contents.push(question);
         return;
       }

@@ -1,109 +1,63 @@
-import * as config from 'config';
-import { ConfigService } from '@nestjs/config';
-import {ChatGPTAPIBrowser} from 'chatgpt'
+import { Module, Injectable } from '@nestjs/common';
+import { ChatGPTAPIBrowser } from 'chatgpt';
+import { resolve } from 'path';
+import { Posts } from '../entities/posts.entity.js';
+import { InjectRepository } from '@nestjs/typeorm';
+import { PostsRepository } from '../posts/posts.repository.js';
+import { PostsService } from '../posts/posts.service.js';
 
-export const chatgpt = async (content: string) => {
- const configService = new ConfigService
-  const api = new ChatGPTAPIBrowser({
-    email: configService.get('OPENAI_EMAIL'),
-    password: configService.get('OPENAI_PASSWORD')
-  })
-  await api.initSession()
-  // const { ChatGPTAPI, getOpenAIAuth, ChatGPTAPIBrowser } = await import(
-  //   'chatgpt'
-  // );
+export class MyGPT {
+  GPTAPI: ChatGPTAPIBrowser;
 
-  // const openAIAuth = await getOpenAIAuth({
-  //   email: configService.get('OPENAI_EMAIL'),
-  //   password: configService.get('OPENAI_password')
-  // })
+  async createAPI(
+    email: string,
+    password: string,
+    nopechaKey?: string,
+  ): Promise<void> {
+    // 자동
+    try {
+      if (nopechaKey) {
+        const api = new ChatGPTAPIBrowser({
+          email: email,
+          password: password,
+          nopechaKey: nopechaKey,
+        });
 
-  // const api = new ChatGPTAPI({ ...openAIAuth })
-  // api.initSession();
+        await api.initSession();
+        console.log('GPT API 연결 완료 !');
+        global.GPTAPI = api;
+      } else {
+        // 수동
+        const api = new ChatGPTAPIBrowser({
+          email: email,
+          password: password,
+        });
 
+        await api.initSession();
+        console.log('GPT API 연결 완료 !');
+        global.GPTAPI = api;
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
 
-  // send a message and wait for the response
-  let res = await api.sendMessage(content);
-  console.log(res.response);
-
-
-
-    // // 메세지 전송
-    // res = await api.sendMessage('Can you expand on that?', {
-    //   conversationId: res.conversationId,
-    //   parentMessageId: res.messageId,
-    // });
-    // console.log(res.response);
-  };
+  //chatGPT작업
+  // async work() {
+  //   console.log('되나?2');
+  //   while (contents.length) {
+  //     const question = contents[0];
+  //     console.log(question);
+  //     console.log('this');
+  //     console.log(this);
+  //     const result = await API.sendMessage(question);
+  //     console.log(result.response);
+  //     const content = result.response;
+  //     await this.postsService.savePost(question, content);
+  //     contents.shift();
+  //     console.log(
+  //       `messageId:${result.messageId},conversationId:${result.conversationId}`,
+  //     );
+  //   }
+  // }
 }
-
-//밸런싱(요청 분할)
-// export const chatgpt = (answer: string) => {
-//   const answers: string[][] = [[], [], []];
-//   const arr = [answers[0].length, answers[1].length, answers[2].length];
-//   const min = Math.min(...arr);
-//   answers[arr.indexOf(min)].push(answer);
-
-//   if (answers[0].length) {
-//     chatGPT1(answers[0][0]);
-//   }
-
-//   if (answers[1].length) {
-//     chatGPT1(answers[1][0]);
-//   }
-
-//   if (answers[2].length) {
-//     chatGPT1(answers[2][0]);
-//   }
-
-//   async function chatGPT1(answer: string) {
-//     // use puppeteer to bypass cloudflare (headful because of captchas)
-//     const openAIAuth = await getOpenAIAuth({
-//       email: process.env.OPENAI_EMAIL_1,
-//       password: process.env.OPENAI_PASSWORD_1,
-//       isGoogleLogin: true,
-//     });
-//     const api = new ChatGPTAPI({ ...openAIAuth });
-
-//     await api.initSession();
-//     // send a message and wait for the response
-//     const result = await api.sendMessage(answer);
-//     // result.response is a markdown-formatted string
-//     console.log(result.response);
-//     answers[0].shift();
-//   }
-
-//   async function chatGPT2(answer: string) {
-//     // use puppeteer to bypass cloudflare (headful because of captchas)
-//     const openAIAuth = await getOpenAIAuth({
-//       email: process.env.OPENAI_EMAIL_2,
-//       password: process.env.OPENAI_PASSWORD_2,
-//       // isGoogleLogin: true,
-//     });
-//     const api = new ChatGPTAPI({ ...openAIAuth });
-
-//     await api.initSession();
-//     // send a message and wait for the response
-//     const result = await api.sendMessage(answer);
-//     // result.response is a markdown-formatted string
-//     console.log(result.response);
-//     answers[1].shift();
-//   }
-
-//   async function chatGPT3(answer: string) {
-//     // use puppeteer to bypass cloudflare (headful because of captchas)
-//     const openAIAuth = await getOpenAIAuth({
-//       email: process.env.OPENAI_EMAIL_3,
-//       password: process.env.OPENAI_PASSWORD_3,
-//       // isGoogleLogin: true,
-//     });
-//     const api = new ChatGPTAPI({ ...openAIAuth });
-
-//     await api.initSession();
-//     // send a message and wait for the response
-//     const result = await api.sendMessage(answer);
-//     // result.response is a markdown-formatted string
-//     console.log(result.response);
-//     answers[2].shift();
-//   }
-// };

@@ -11,17 +11,18 @@ export class UserService {
     @InjectRepository(UsersRepository)
     private usersRepository: UsersRepository,
   ) {}
-  getTest(): string {
-    return 'hello!';
-  }
+
   async signup(createUserDto: CreateUserDto) {
     const { Id, password, name } = createUserDto;
     const hashed = await bcrypt.hash(password, 11);
+    const existUser = await this.usersRepository.findOne({ where: { Id: Id } });
+    if (existUser) return '이미 가입된 아이디 입니다';
 
     const user = new Users();
     user.Id = Id;
     user.password = hashed;
     user.name = name;
     await this.usersRepository.save(user);
+    return '회원가입 완료';
   }
 }

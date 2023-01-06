@@ -14,16 +14,14 @@ export class UserService {
   getTest(): string {
     return 'hello!';
   }
-  async signup(createUserDto: CreateUserDto): Promise<Users> {
+  async signup(createUserDto: CreateUserDto) {
     const { Id, password, name } = createUserDto;
-    const hashed = bcrypt.hash(password);
+    const hashed = await bcrypt.hash(password, 11);
 
-    const user = {
-      Id,
-      password: hashed,
-      name,
-    };
-
-    return await this.usersRepository.signup(user);
+    const user = new Users();
+    user.Id = Id;
+    user.password = hashed;
+    user.name = name;
+    await this.usersRepository.save(user);
   }
 }

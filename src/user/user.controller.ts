@@ -17,7 +17,7 @@ export class UserController {
 
   //회원가입
   @Post()
-  signup(@Body(ValidationPipe) createUserDto: CreateUserDto): Promise<Users> {
+  signup(@Body(ValidationPipe) createUserDto: CreateUserDto) {
     return this.userService.signup(createUserDto);
   }
 }

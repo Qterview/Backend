@@ -1,13 +1,14 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Like } from 'typeorm';
+import { Db, Like } from 'typeorm';
 import { MyGPT } from '../util/chatgpt.js';
 import { PostsRepository, KeywordsRepository } from './posts.repository.js';
 import { Keywords, Posts } from '../entities/posts.entity.js';
 import { HttpService } from '@nestjs/axios';
 import { firstValueFrom } from 'rxjs';
 import { Model } from 'mongoose';
-import { Post } from 'src/interfaces/post.interface.js';
+import { InjectModel } from '@nestjs/mongoose';
+import { Post, PostDocument } from '../schemas/post.schema.js';
 
 // import {Queue} from '../util/queue.js'
 // import { Cron } from '@nestjs/schedule';
@@ -21,8 +22,7 @@ export class PostsService {
     @InjectRepository(KeywordsRepository)
     private keywordsRepository: KeywordsRepository,
     private readonly httpService: HttpService,
-    @Inject('POST_MODEL')
-    private postModel: Model<Post>,
+    @InjectModel(Post.name) private postModel: Model<PostDocument>,
   ) {}
 
   async getPost(): Promise<any> {
@@ -31,14 +31,31 @@ export class PostsService {
   }
 
   // 게시글 검색
-  async search(content?: string): Promise<Posts[]> {
-    let searchResult: Posts[] = await this.postsRepository.findBy({
-      title: Like(`%${content}%`),
-    });
-
-    console.log(searchResult);
-
-    return searchResult;
+  async search(search?: string): Promise<Posts[]> {
+    console.log(search);
+    // const posts = await this.postModel.aggregate([
+    //   {
+    //     $search: {
+    //       text: {
+    //         query: `${search}`,
+    //         path: 'title',
+    //       },
+    //     },
+    //   },
+    //   {
+    //     $limit: 10,
+    //   },
+    //   {
+    //     $project: {
+    //       _id: 0,
+    //       title: 1,
+    //       content: 1,
+    //     },
+    //   },
+    // ]);
+    const posts = await this.postModel.find({});
+    console.log(posts);
+    return;
   }
 
   async createPost(question: string) {

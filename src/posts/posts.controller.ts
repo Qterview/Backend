@@ -13,8 +13,8 @@ export class PostsController {
   }
 
   @Get('search')
-  search(@Query('content') content: string): Promise<Posts[]> {
-    return this.postsService.search(content);
+  search(@Body('search') search: string): Promise<Posts[]> {
+    return this.postsService.search(search);
   }
 
   @Post()

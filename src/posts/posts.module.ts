@@ -7,21 +7,20 @@ import { TypeOrmExModule } from '../database/typeorm/typeorm-ex.module.js';
 import { PostsRepository, KeywordsRepository } from './posts.repository.js';
 import { MyGPT } from '../util/chatgpt.js';
 import { HttpModule } from '@nestjs/axios';
-import { MongooseModule } from '../database/mongoose/mongoose.module.js';
-import { postsProviders } from '../model/post.providers.js';
+import { MongooseModule } from '@nestjs/mongoose';
+import { Post, PostSchema } from '../schemas/post.schema.js';
 // import {Queue} from '../util/queue.js'
 
 @Module({
   imports: [
     TypeOrmExModule.forCustomRepository([PostsRepository, KeywordsRepository]),
     HttpModule,
-    MongooseModule,
+    MongooseModule.forFeature([{name: Post.name, schema: PostSchema}]),
   ],
   controllers: [PostsController],
   providers: [
     PostsService,
     MyGPT,
-    ...postsProviders,
     // Queue
   ],
   exports: [PostsService],

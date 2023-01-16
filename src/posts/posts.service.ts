@@ -7,7 +7,8 @@ import { Keywords, Posts } from '../entities/posts.entity.js';
 import { HttpService } from '@nestjs/axios';
 import { firstValueFrom } from 'rxjs';
 import { Model } from 'mongoose';
-import { Post } from 'src/interfaces/post.interface.js';
+import { Post, PostDocument } from '../schemas/post.schema.js';
+import { InjectModel } from '@nestjs/mongoose';
 
 // import {Queue} from '../util/queue.js'
 // import { Cron } from '@nestjs/schedule';
@@ -18,11 +19,16 @@ export class PostsService {
   constructor(
     @InjectRepository(PostsRepository)
     private postsRepository: PostsRepository,
+
     @InjectRepository(KeywordsRepository)
     private keywordsRepository: KeywordsRepository,
     private readonly httpService: HttpService,
-    @Inject('POST_MODEL')
-    private postModel: Model<Post>,
+
+    @InjectModel(Post.name)
+    private postModel: Model<PostDocument>,
+
+    // @InjectConnection() 
+    // private connection: Connection
   ) {}
 
   async getPost(): Promise<any> {

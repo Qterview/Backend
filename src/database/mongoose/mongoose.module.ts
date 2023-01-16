@@ -1,8 +1,8 @@
-import { Module } from '@nestjs/common';
-import { databaseProviders } from './mongoose.providers.js';
+// import { Module } from '@nestjs/common';
+// import { databaseProviders } from './mongoose.providers.js';
 
-@Module({
-  providers: [...databaseProviders],
-  exports: [...databaseProviders],
-})
-export class MongooseModule {}
+// @Module({
+//   providers: [...databaseProviders],
+//   exports: [...databaseProviders],
+// })
+// export class MongooseModule {}

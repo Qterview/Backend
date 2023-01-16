@@ -1,6 +1,20 @@
-import * as mongoose from 'mongoose';
+import { Prop, Schema, SchemaFactory, SchemaOptions } from '@nestjs/mongoose';
+import { HydratedDocument } from 'mongoose';
 
-export const PostSchema = new mongoose.Schema({
-  title: String,
-  content: String,
-});
+const options: SchemaOptions = {
+  timestamps: true,  //자동으로 등록일, 수정일을 넣어줍니다.
+  collection : 'Qterview',
+  _id : true  //기본 인덱스인 id값을 매핑하여 줍니다.
+};
+
+@Schema(options)
+export class Post {
+  @Prop({ required: true })
+  title: string;
+
+  @Prop({ required: true })
+  content: number;
+}
+
+export const PostSchema = SchemaFactory.createForClass(Post);
+export type PostDocument = HydratedDocument<Post>;

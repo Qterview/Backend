@@ -21,8 +21,8 @@ import { Post, PostSchema } from './schemas/post.schema.js';
     MongooseModule.forRoot(process.env.MONGODB, {
       useNewUrlParser: true,	// 몽구스에서 필요로 하는 두 번째 인자 -1
       useUnifiedTopology: true,	// 몽구스에서 필요로 하는 두 번째 인자 -2	
+      dbName: 'Qterview'
     }),
-    MongooseModule.forFeature([{name : Post.name, schema : PostSchema}]),
     // UserModule,
     PostsModule,
   ],

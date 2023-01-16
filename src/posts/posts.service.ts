@@ -31,9 +31,8 @@ export class PostsService {
     // private connection: Connection
   ) {}
 
-  async getPost(): Promise<any> {
-    // : Promise<Posts[]> {
-    return this.postsRepository.find({});
+  async getPost(): Promise<Posts[]> {
+    return await this.postModel.find();
   }
 
   // 게시글 검색

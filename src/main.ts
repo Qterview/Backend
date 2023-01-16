@@ -28,14 +28,14 @@ async function bootstrap() {
     await app.listen(port);
     console.log(`HTTP 서버가 실행되었습니다.PORT::${port}`);
   }
-  const myGPT = new MyGPT();
+//   const myGPT = new MyGPT();
 
-  // gpt에 사용되는 api 생성
-  myGPT.createAPI(
-    configService.get<string>('OPENAI_EMAIL'),
-    configService.get<string>('OPENAI_PASSWORD'),
-    configService.get<string>('NOPECHAKEY'),
-  );
+//   // gpt에 사용되는 api 생성
+//   myGPT.createAPI(
+//     configService.get<string>('OPENAI_EMAIL'),
+//     configService.get<string>('OPENAI_PASSWORD'),
+//     configService.get<string>('NOPECHAKEY'),
+//   );
 }
 
 bootstrap();

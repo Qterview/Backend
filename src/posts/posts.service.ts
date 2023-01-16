@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Like } from 'typeorm';
 import { MyGPT } from '../util/chatgpt.js';
@@ -6,6 +6,8 @@ import { PostsRepository, KeywordsRepository } from './posts.repository.js';
 import { Keywords, Posts } from '../entities/posts.entity.js';
 import { HttpService } from '@nestjs/axios';
 import { firstValueFrom } from 'rxjs';
+import { Model } from 'mongoose';
+import { Post } from 'src/interfaces/post.interface.js';
 
 // import {Queue} from '../util/queue.js'
 // import { Cron } from '@nestjs/schedule';
@@ -19,6 +21,8 @@ export class PostsService {
     @InjectRepository(KeywordsRepository)
     private keywordsRepository: KeywordsRepository,
     private readonly httpService: HttpService,
+    @Inject('POST_MODEL')
+    private postModel: Model<Post>,
   ) {}
 
   async getPost(): Promise<any> {
@@ -54,12 +58,13 @@ export class PostsService {
 
         console.log(result.response);
         const answer = result.response;
-        const post = new Posts();
+        const createPost = new this.postModel({
+          title: question,
+          content: answer,
+        });
+        createPost.save();
         const keywords = new Keywords();
-        post.title = question;
-        post.content = answer;
         contents.shift();
-        const PostCreate = await this.postsRepository.save(post);
         //키워드 추출 요청후 DB에 저장
         // const payload = { data: answer };
         // const { data } = await firstValueFrom(

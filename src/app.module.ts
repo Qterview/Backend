@@ -16,12 +16,14 @@ import { MongooseModule } from '@nestjs/mongoose';
       // envFilePath: [`${__dirname}/.env`],
       envFilePath: [`.env`],
     }),
-    // ScheduleModule.forRoot(),
-
     TypeOrmModule.forRootAsync(DataBaseConfig),
     // UserModule,
     PostsModule,
-    MongooseModule.forRoot(process.env.MONGODB),
+    MongooseModule.forRoot(process.env.MONGODB, {
+      dbName: 'Qterview',
+      useNewUrlParser: true, // 몽구스에서 필요로 하는 두 번째 인자 -1
+      useUnifiedTopology: true, // 몽구스에서 필요로 하는 두 번째 인자 -2
+    }),
   ],
   controllers: [],
   providers: [],

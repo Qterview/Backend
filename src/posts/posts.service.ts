@@ -9,6 +9,7 @@ import { firstValueFrom } from 'rxjs';
 import { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
 import { Post, PostDocument } from '../schemas/post.schema.js';
+import { Work, WorkDocument } from '../schemas/work.chemas.js';
 
 // import {Queue} from '../util/queue.js'
 // import { Cron } from '@nestjs/schedule';
@@ -22,40 +23,42 @@ export class PostsService {
     @InjectRepository(KeywordsRepository)
     private keywordsRepository: KeywordsRepository,
     private readonly httpService: HttpService,
-    @InjectModel(Post.name) private postModel: Model<PostDocument>,
+    @InjectModel(Post.name)
+    private postModel: Model<PostDocument>,
+    @InjectModel(Work.name)
+    private workModel: Model<WorkDocument>,
   ) {}
 
   async getPost(): Promise<any> {
     // : Promise<Posts[]> {
-    return this.postsRepository.find({});
+    return await this.postModel.find({});
   }
 
   // 게시글 검색
   async search(search?: string): Promise<Posts[]> {
     console.log(search);
-    // const posts = await this.postModel.aggregate([
-    //   {
-    //     $search: {
-    //       text: {
-    //         query: `${search}`,
-    //         path: 'title',
-    //       },
-    //     },
-    //   },
-    //   {
-    //     $limit: 10,
-    //   },
-    //   {
-    //     $project: {
-    //       _id: 0,
-    //       title: 1,
-    //       content: 1,
-    //     },
-    //   },
-    // ]);
-    const posts = await this.postModel.find({});
-    console.log(posts);
-    return;
+    const posts = await this.postModel.aggregate([
+      {
+        $search: {
+          text: {
+            query: `${search}`,
+            path: 'title',
+          },
+        },
+      },
+      {
+        $limit: 10,
+      },
+      {
+        $project: {
+          _id: 0,
+          title: 1,
+          content: 1,
+        },
+      },
+    ]);
+
+    return posts;
   }
 
   async createPost(question: string) {
@@ -75,11 +78,8 @@ export class PostsService {
 
         console.log(result.response);
         const answer = result.response;
-        const createPost = new this.postModel({
-          title: question,
-          content: answer,
-        });
-        createPost.save();
+        await this.postModel.create({ title: question, content: answer });
+
         const keywords = new Keywords();
         contents.shift();
         //키워드 추출 요청후 DB에 저장

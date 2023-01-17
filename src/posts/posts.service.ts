@@ -20,6 +20,7 @@ export class PostsService {
   constructor(
     @InjectRepository(PostsRepository)
     private postsRepository: PostsRepository,
+
     @InjectRepository(KeywordsRepository)
     private keywordsRepository: KeywordsRepository,
     private readonly httpService: HttpService,

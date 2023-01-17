@@ -9,7 +9,7 @@ import { MyGPT } from '../util/chatgpt.js';
 import { HttpModule } from '@nestjs/axios';
 import { MongooseModule } from '@nestjs/mongoose';
 import { Post, PostSchema } from '../schemas/post.schema.js';
-import { Work, WorkSchema } from '../schemas/work.chemas.js';
+import { Work, WorkSchema } from '../schemas/work.schemas.js';
 // import {Queue} from '../util/queue.js'
 
 @Module({

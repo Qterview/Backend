@@ -6,7 +6,6 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { PostsModule } from './posts/posts.module.js';
 import { DataBaseConfig } from './database/typeorm/DataBaseConfig.js';
 import { MongooseModule } from '@nestjs/mongoose';
-
 // import { ScheduleModule } from '@nestjs/schedule';
 
 @Module({
@@ -17,6 +16,11 @@ import { MongooseModule } from '@nestjs/mongoose';
       envFilePath: [`.env`],
     }),
     TypeOrmModule.forRootAsync(DataBaseConfig),
+    MongooseModule.forRoot(process.env.MONGODB, {
+      useNewUrlParser: true, // 몽구스에서 필요로 하는 두 번째 인자 -1
+      useUnifiedTopology: true, // 몽구스에서 필요로 하는 두 번째 인자 -2
+      dbName: 'Qterview',
+    }),
     // UserModule,
     PostsModule,
     MongooseModule.forRoot(process.env.MONGODB, {

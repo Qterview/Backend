@@ -7,13 +7,10 @@ const options: SchemaOptions = {
 };
 
 @Schema(options)
-export class Post {
+export class Work {
   @Prop({ required: true })
-  title: string;
-
-  @Prop({ required: true })
-  content: string;
+  work: string;
 }
 
-export const PostSchema = SchemaFactory.createForClass(Post);
-export type PostDocument = HydratedDocument<Post>;
+export const WorkSchema = SchemaFactory.createForClass(Work);
+export type WorkDocument = HydratedDocument<Work>;

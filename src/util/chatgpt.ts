@@ -21,6 +21,7 @@ export class MyGPT {
           email: email,
           password: password,
           nopechaKey: nopechaKey,
+          minimize: false,
         });
 
         await api.initSession();

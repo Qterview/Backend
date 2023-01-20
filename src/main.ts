@@ -1,7 +1,6 @@
 import { ConfigService } from '@nestjs/config';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module.js';
-import { MyGPT } from './util/chatgpt.js';
 import * as fs from 'fs';
 
 async function bootstrap() {
@@ -28,14 +27,6 @@ async function bootstrap() {
     await app.listen(port);
     console.log(`HTTP 서버가 실행되었습니다.PORT::${port}`);
   }
-//   const myGPT = new MyGPT();
-
-//   // gpt에 사용되는 api 생성
-//   myGPT.createAPI(
-//     configService.get<string>('OPENAI_EMAIL'),
-//     configService.get<string>('OPENAI_PASSWORD'),
-//     configService.get<string>('NOPECHAKEY'),
-//   );
 }
 
 bootstrap();

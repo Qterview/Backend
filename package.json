@@ -40,6 +40,7 @@
     "mongoose": "^6.8.3",
     "mysql2": "^2.3.3",
     "nopecha": "^1.0.9",
+    "openai": "^3.1.0",
     "puppeteer": "^19.4.1",
     "reflect-metadata": "^0.1.13",
     "rimraf": "^3.0.2",

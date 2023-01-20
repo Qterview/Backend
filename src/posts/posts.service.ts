@@ -64,7 +64,10 @@ export class PostsService {
 
   async createPost(question: string) {
     try {
+      // const data = await this.chatGPT.sendMessage(question);
+      // return data;
       // 작업 처리중 상태 이면 Work에 저장만하고 리턴
+
       await this.workModel.create({ work: question });
       if (this.chatGPT.Working) return;
 

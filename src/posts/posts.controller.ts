@@ -22,8 +22,8 @@ export class PostsController {
   }
 
   @Post()
-  createPost(@Body('question') question: string, @Res() res: Response) {
+  createPost(@Body('question') question: string) {
     this.postsService.createPost(question);
-    return res.status(201).send({ message: '질문 등록 요청 완료' });
+    return '질문요청 완료';
   }
 }

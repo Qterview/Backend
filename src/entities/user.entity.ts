@@ -21,10 +21,4 @@ export class Users extends BaseEntity {
 
   @Column({ nullable: false, length: 40 })
   name?: string;
-
-  @Column({ nullable: true, length: 40 })
-  phoneNumber?: string;
-
-  @Column({ nullable: true, length: 100 })
-  livingAt?: string;
 }

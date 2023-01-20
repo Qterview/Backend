@@ -1,4 +1,4 @@
-import { CustomRepository } from '../database/typeorm-ex.decorator.js';
+import { CustomRepository } from '../database/typeorm/typeorm-ex.decorator.js';
 import { Repository } from 'typeorm';
 import { Keywords, Posts } from '../entities/posts.entity.js';
 

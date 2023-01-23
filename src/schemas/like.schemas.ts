@@ -9,10 +9,10 @@ const options: SchemaOptions = {
 @Schema(options)
 export class Like {
   @Prop({ required: true })
-  title: string;
+  postId: string;
 
   @Prop({ required: true })
-  content: string;
+  clientIp: string;
 }
 
 export const LikeSchema = SchemaFactory.createForClass(Like);

@@ -1,6 +1,5 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { HttpException, Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Db, Like } from 'typeorm';
 import { PostsRepository, KeywordsRepository } from './posts.repository.js';
 import { Keywords, Posts } from '../entities/posts.entity.js';
 import { HttpService } from '@nestjs/axios';
@@ -9,7 +8,9 @@ import { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
 import { Post, PostDocument } from '../schemas/post.schema.js';
 import { Work, WorkDocument } from '../schemas/work.schemas.js';
+import { Like, LikeDocument } from '../schemas/like.schemas.js';
 import { ChatGPT } from '../util/chatgpt.js';
+import { GetPostDto } from './dto/get_posts.dto.js';
 
 // import {Queue} from '../util/queue.js'
 // import { Cron } from '@nestjs/schedule';
@@ -27,16 +28,20 @@ export class PostsService {
     private postModel: Model<PostDocument>,
     @InjectModel(Work.name)
     private workModel: Model<WorkDocument>,
+    @InjectModel(Like.name)
+    private likeModel: Model<LikeDocument>,
     private chatGPT: ChatGPT,
   ) {}
 
-  async getPost(): Promise<any> {
-    // : Promise<Posts[]> {
-    return await this.postModel.find({});
+  async getPost(page: string): Promise<GetPostDto[]> {
+    const posts = await this.postModel
+      .find({})
+      .select({ title: 1, content: 1 });
+    return posts;
   }
 
   // 게시글 검색
-  async search(search?: string): Promise<Posts[]> {
+  async search(search?: string): Promise<GetPostDto[]> {
     console.log(search);
     const posts = await this.postModel.aggregate([
       {
@@ -53,7 +58,7 @@ export class PostsService {
       },
       {
         $project: {
-          _id: 0,
+          _id: 1,
           title: 1,
           content: 1,
         },
@@ -93,7 +98,13 @@ export class PostsService {
     // return await api.sendMessage(content);
   }
 
-  async savePost(title: string, content: string) {}
+  async likePost(postId: string, clientIp: string) {
+    const exist = await this.likeModel.findOne({ postId, clientIp });
+    console.log(exist);
+
+    if (exist) throw new HttpException('이미 좋아요를 눌렀습니다', 400);
+    await this.likeModel.create({ postId, clientIp });
+  }
 
   // 큐와 스케줄을 이용한 게시글 등록
   // async createPost(content: string) {

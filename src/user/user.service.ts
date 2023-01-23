@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Users } from '../entities/user.entity.js';
 import { CreateUserDto } from './dto/create_user.dto.js';
@@ -31,7 +31,7 @@ export class UserService {
   async login(loginUserDto: LoginUserDto) {
     const { Id, password } = loginUserDto;
     const existUser = await this.usersRepository.findUserbyId(Id);
-    if (!existUser) return '가입되지 않은 아이디 입니다';
+    if (!existUser) throw new HttpException('존재하지 않는 아이디 입니다', 400);
     const passwordVerify = bcrypt.compare(password, existUser.password);
     if (!passwordVerify) return '비밀번호 오류';
     //로그인 인증방식

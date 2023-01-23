@@ -1,8 +1,19 @@
-import { Controller, Get, Post, Body, Query, Param, Res } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Query,
+  Param,
+  Res,
+  Ip,
+  HttpException,
+} from '@nestjs/common';
 import { PostsService } from './posts.service.js';
 import { Posts } from '../entities/posts.entity';
 import { Response } from 'express';
 import { ChatGPT } from '../util/chatgpt.js';
+import { GetPostDto } from './dto/get_posts.dto.js';
 
 @Controller('posts')
 export class PostsController {
@@ -12,12 +23,12 @@ export class PostsController {
   ) {}
 
   @Get()
-  getPost(): any {
-    return this.postsService.getPost();
+  getPost(@Query('page') page: string): Promise<GetPostDto[]> {
+    return this.postsService.getPost(page);
   }
 
   @Get('search')
-  search(@Body('search') search: string): Promise<Posts[]> {
+  search(@Body('search') search: string): Promise<GetPostDto[]> {
     return this.postsService.search(search);
   }
 
@@ -25,5 +36,10 @@ export class PostsController {
   createPost(@Body('question') question: string) {
     this.postsService.createPost(question);
     return '질문요청 완료';
+  }
+
+  @Post('like/:id')
+  async likePost(@Param('id') postId: string, @Ip() clientIp: any) {
+    await this.postsService.likePost(postId, clientIp);
   }
 }

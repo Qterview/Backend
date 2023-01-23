@@ -41,6 +41,7 @@ export class PostsService {
     const posts = await this.postModel.aggregate([
       {
         $search: {
+          index: 'text',
           text: {
             query: `${search}`,
             path: 'title',

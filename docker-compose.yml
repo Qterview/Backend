@@ -6,16 +6,16 @@ services:
     ports:
       - 80:3000
     environment:
-      DB_HOST: ${{secrets.DB_HOST}}
-      DB_PORT: ${{secrets.DB_PORT}}
-      DB_USER: ${{secrets.DB_USER}}
-      DB_NAME: ${{secrets.DB_NAME}}
-      DB_PASSWORD: ${{secrets.DB_PASSWORD}}
-      MONGODB: ${{secrets.MONGODB}}
-      OPENAI_EMAIL: ${{secrets.OPENAI_EMAIL}}
-      OPENAI_PASSWORD: ${{secrets.OPENAI_PASSWORD}}
-      OPENAI_API_KEY: ${{secrets.OPENAI_API_KEY}}
-      NOPECHAKE: ${{secrets.NOPECHAKE}}
-      KEY: ${{secrets.KEY}}
-      CERT: ${{secrets.CERT}}
-      BUILD_ENV: ${{secrets.BUILD_ENV}}
+      DB_HOST: '${DB_HOST}'
+      DB_PORT: '${DB_PORT}'
+      DB_USER: '${DB_USER}'
+      DB_NAME: '${DB_NAME}'
+      DB_PASSWORD: '${DB_PASSWORD}'
+      MONGODB: '${MONGODB}'
+      OPENAI_EMAIL: '${OPENAI_EMAIL}'
+      OPENAI_PASSWORD: '${OPENAI_PASSWORD}'
+      OPENAI_API_KEY: '${OPENAI_API_KEY}'
+      NOPECHAKE: '${NOPECHAKE}'
+      KEY: '${KEY}'
+      CERT: '${CERT}'
+      BUILD_ENV: '${BUILD_ENV}'

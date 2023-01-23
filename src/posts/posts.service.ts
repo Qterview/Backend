@@ -100,10 +100,20 @@ export class PostsService {
 
   async likePost(postId: string, clientIp: string) {
     const exist = await this.likeModel.findOne({ postId, clientIp });
-    console.log(exist);
 
-    if (exist) throw new HttpException('이미 좋아요를 눌렀습니다', 400);
+    if (exist) throw new HttpException('이미 평가했습니다', 400);
     await this.likeModel.create({ postId, clientIp });
+    await this.postModel.findByIdAndUpdate(postId, { $inc: { useful: 1 } });
+    return '평가완료';
+  }
+
+  async UnlikePost(postId: string, clientIp: string) {
+    const exist = await this.likeModel.findOne({ postId, clientIp });
+
+    if (exist) throw new HttpException('이미 평가했습니다', 400);
+    await this.likeModel.create({ postId, clientIp });
+    await this.postModel.findByIdAndUpdate(postId, { $inc: { useful: -1 } });
+    return '평가완료';
   }
 
   // 큐와 스케줄을 이용한 게시글 등록

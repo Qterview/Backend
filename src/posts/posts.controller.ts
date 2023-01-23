@@ -40,6 +40,11 @@ export class PostsController {
 
   @Post('like/:id')
   async likePost(@Param('id') postId: string, @Ip() clientIp: any) {
-    await this.postsService.likePost(postId, clientIp);
+    return await this.postsService.likePost(postId, clientIp);
+  }
+
+  @Post('unlike/:id')
+  async UnlikePost(@Param('id') postId: string, @Ip() clientIp: any) {
+    return await this.postsService.UnlikePost(postId, clientIp);
   }
 }

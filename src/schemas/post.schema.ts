@@ -13,6 +13,9 @@ export class Post {
 
   @Prop({ required: true })
   content: string;
+
+  @Prop({ required: true })
+  useful: number;
 }
 
 export const PostSchema = SchemaFactory.createForClass(Post);

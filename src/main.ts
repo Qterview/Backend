@@ -2,6 +2,7 @@ import { ConfigService } from '@nestjs/config';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module.js';
 import * as fs from 'fs';
+import { HttpExceptionFilter } from './common/Exception.filter.js';
 
 async function bootstrap() {
   let configService = new ConfigService();
@@ -22,6 +23,7 @@ async function bootstrap() {
   //   console.log(`HTTPS 서버가 실행되었습니다.PORT::${port}`);
   // } else {
   const app = await NestFactory.create(AppModule);
+  app.useGlobalFilters(new HttpExceptionFilter());
   app.enableCors();
 
   await app.listen(port);

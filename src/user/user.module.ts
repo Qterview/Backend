@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { HttpModule } from '@nestjs/axios';
 import { UserService } from './user.service';
 import { UserController } from './user.controller';
-import { TypeOrmExModule } from '../database/typeorm/typeorm-ex.module.js';
+import { TypeOrmExModule } from '../database/typeorm-ex.module.js';
 import { UsersRepository } from './user.repository.js';
 
 @Module({

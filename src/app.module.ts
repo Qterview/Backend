@@ -4,7 +4,7 @@ import { UserModule } from './user/user.module.js';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { PostsModule } from './posts/posts.module.js';
-import { DataBaseConfig } from './database/typeorm/DataBaseConfig.js';
+import { DataBaseConfig } from './database/DataBaseConfig.js';
 import { MongooseModule } from '@nestjs/mongoose';
 // import { ScheduleModule } from '@nestjs/schedule';
 

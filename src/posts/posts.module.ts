@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 
 import { PostsController } from './posts.controller.js';
 import { PostsService } from './posts.service.js';
-import { TypeOrmExModule } from '../database/typeorm/typeorm-ex.module.js';
+import { TypeOrmExModule } from '../database/typeorm-ex.module.js';
 
 import { PostsRepository, KeywordsRepository } from './posts.repository.js';
 

@@ -11,6 +11,7 @@ import { Work, WorkDocument } from '../schemas/work.schemas.js';
 import { Like, LikeDocument } from '../schemas/like.schemas.js';
 import { ChatGPT } from '../util/chatgpt.js';
 import { GetPostDto } from './dto/get_posts.dto.js';
+import { SearchDto } from './dto/search.dto.js';
 
 // import {Queue} from '../util/queue.js'
 // import { Cron } from '@nestjs/schedule';
@@ -37,11 +38,12 @@ export class PostsService {
     const posts = await this.postModel
       .find({})
       .select({ title: 1, content: 1 });
+
     return posts;
   }
 
   // 게시글 검색
-  async search(search?: string): Promise<GetPostDto[]> {
+  async search(search: SearchDto): Promise<GetPostDto[]> {
     console.log(search);
     const posts = await this.postModel.aggregate([
       {
@@ -100,10 +102,20 @@ export class PostsService {
 
   async likePost(postId: string, clientIp: string) {
     const exist = await this.likeModel.findOne({ postId, clientIp });
-    console.log(exist);
 
-    if (exist) throw new HttpException('이미 좋아요를 눌렀습니다', 400);
+    if (exist) throw new HttpException('이미 평가했습니다', 400);
     await this.likeModel.create({ postId, clientIp });
+    await this.postModel.findByIdAndUpdate(postId, { $inc: { useful: 1 } });
+    return '평가완료';
+  }
+
+  async UnlikePost(postId: string, clientIp: string) {
+    const exist = await this.likeModel.findOne({ postId, clientIp });
+
+    if (exist) throw new HttpException('이미 평가했습니다', 400);
+    await this.likeModel.create({ postId, clientIp });
+    await this.postModel.findByIdAndUpdate(postId, { $inc: { useful: -1 } });
+    return '평가완료';
   }
 
   // 큐와 스케줄을 이용한 게시글 등록

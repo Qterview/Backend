@@ -108,6 +108,7 @@ export class ChatGPT {
           {
             title: workData.work,
             content: result,
+            useful: 0,
           },
           // { session },
         );

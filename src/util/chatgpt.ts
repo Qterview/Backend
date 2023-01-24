@@ -1,7 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Cron, CronExpression } from '@nestjs/schedule';
-import { Model, startSession } from 'mongoose';
+import mongoose, { Model, startSession } from 'mongoose';
 import { Configuration, OpenAIApi } from 'openai';
 import { executablePath } from 'puppeteer';
 import { Post, PostDocument } from '../schemas/post.schema.js';
@@ -77,7 +77,6 @@ export class ChatGPT {
       this.work(); //작업시작
     } catch (e) {
       console.log(e);
-      console.log(e.name);
       this.initGPT();
     }
   }
@@ -85,10 +84,12 @@ export class ChatGPT {
   async work() {
     this.Working = true;
     while (true) {
-      // const session = await startSession();
+      console.log('1111111111111111111');
+      const session = await this.postModel.startSession();
       try {
         //트랜잭션 시작
-        // session.startTransaction();
+        session.startTransaction();
+        console.log('2222222222222222222222');
 
         //작업 검색
         const workData = await this.workModel.findOne({});
@@ -102,32 +103,34 @@ export class ChatGPT {
 
         //chatGPT 메세지 요청
         const result = await this.sendMessage(workData.work);
-        console.log(result);
+        if (!result)
+          throw new Error(
+            'API에 문제가 생겼습니다. API가 연결된 이후 자동 실행됩니다.',
+          );
         //게시물 생성
         await this.postModel.create(
-          {
-            title: workData.work,
-            content: result,
-            useful: 0,
-          },
-          // { session },
+          [
+            {
+              title: workData.work,
+              content: result,
+              useful: 0,
+            },
+          ],
+          { session },
         );
 
         //작업삭제
-        await this.workModel.deleteOne(
-          { _id: workData._id },
-          //  { session }
-        );
+        await this.workModel.deleteOne({ _id: workData._id }, { session });
 
         //트랜잭션 성공시 커밋후 세션 종료
-        // await session.commitTransaction();
-        // session.endSession();
+        await session.commitTransaction();
+        session.endSession();
       } catch (e) {
         //실패시 롤백후 세션 종료
-        // await session.abortTransaction();
-        // session.endSession();
+        await session.abortTransaction();
+        session.endSession();
         console.log(e);
-        console.log(e.name);
+        break;
       }
     }
   }
@@ -141,7 +144,7 @@ export class ChatGPT {
         });
 
         return data.response;
-      } else {
+      } else if (this.gptApi_prod) {
         const response = await this.gptApi_prod.createCompletion({
           model: 'text-davinci-003',
           prompt: `Q: ${message}\nA:`,
@@ -152,6 +155,8 @@ export class ChatGPT {
         });
 
         return response.data.choices[0].text;
+      } else {
+        throw new Error('연결된 api가 없습니다.');
       }
     } catch (e) {
       if (e.response) {

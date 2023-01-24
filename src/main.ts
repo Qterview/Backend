@@ -1,10 +1,8 @@
 import { ConfigService } from '@nestjs/config';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module.js';
-import * as fs from 'fs';
 import { HttpExceptionFilter } from './common/Exception.filter.js';
-import { DocumentBuilder } from '@nestjs/swagger';
-import { SwaggerModule } from '@nestjs/swagger/dist/swagger-module.js';
+import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
 async function bootstrap() {
   // let configService = new ConfigService();

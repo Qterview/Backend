@@ -11,6 +11,7 @@ import { Work, WorkDocument } from '../schemas/work.schemas.js';
 import { Like, LikeDocument } from '../schemas/like.schemas.js';
 import { ChatGPT } from '../util/chatgpt.js';
 import { GetPostDto } from './dto/get_posts.dto.js';
+import { SearchDto } from './dto/search.dto.js';
 
 // import {Queue} from '../util/queue.js'
 // import { Cron } from '@nestjs/schedule';
@@ -37,11 +38,12 @@ export class PostsService {
     const posts = await this.postModel
       .find({})
       .select({ title: 1, content: 1 });
+
     return posts;
   }
 
   // 게시글 검색
-  async search(search?: string): Promise<GetPostDto[]> {
+  async search(search: SearchDto): Promise<GetPostDto[]> {
     console.log(search);
     const posts = await this.postModel.aggregate([
       {

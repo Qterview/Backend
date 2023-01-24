@@ -1,9 +1,6 @@
 import { HttpException, Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { PostsRepository, KeywordsRepository } from './posts.repository.js';
-import { Keywords, Posts } from '../entities/posts.entity.js';
 import { HttpService } from '@nestjs/axios';
-import { firstValueFrom } from 'rxjs';
 import { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
 import { Post, PostDocument } from '../schemas/post.schema.js';
@@ -20,10 +17,6 @@ const contents: string[] = [];
 export class PostsService {
   private SIGN: number;
   constructor(
-    @InjectRepository(PostsRepository)
-    private postsRepository: PostsRepository,
-    @InjectRepository(KeywordsRepository)
-    private keywordsRepository: KeywordsRepository,
     private readonly httpService: HttpService,
     @InjectModel(Post.name)
     private postModel: Model<PostDocument>,
@@ -37,7 +30,7 @@ export class PostsService {
   async getPost(page: string): Promise<GetPostDto[]> {
     const posts = await this.postModel
       .find({})
-      .select({ title: 1, content: 1 });
+      .select({ title: 1, content: 1, useful: 1 });
 
     return posts;
   }
@@ -63,41 +56,21 @@ export class PostsService {
           _id: 1,
           title: 1,
           content: 1,
+          useful: 1,
         },
       },
     ]);
-
     return posts;
   }
 
   async createPost(question: string) {
     try {
-      // const data = await this.chatGPT.sendMessage(question);
-      // return data;
-      // 작업 처리중 상태 이면 Work에 저장만하고 리턴
-
       await this.workModel.create({ work: question });
       if (this.chatGPT.Working) return;
-
       this.chatGPT.work();
-
-      // const keywords = new Keywords();
-      //키워드 추출 요청후 DB에 저장
-      // const payload = { data: answer };
-      // const { data } = await firstValueFrom(
-      //   this.httpService.post('http://localhost:5000/keybert', payload),
-      // );
-      // const keyword: string[] = data.keyword;
-      // keyword.forEach((keyword) => {
-      //   keywords.postId = PostCreate.postId;
-      //   keywords.keyword = keyword;
-      // });
     } catch (error) {
       console.log(error);
     }
-
-    // 큐 + 스케줄러방식
-    // return await api.sendMessage(content);
   }
 
   async likePost(postId: string, clientIp: string) {

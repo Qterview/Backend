@@ -11,16 +11,12 @@ import {
 } from '@nestjs/common';
 import { ApiBody, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { PostsService } from './posts.service.js';
-import { ChatGPT } from '../util/chatgpt.js';
 import { GetPostDto } from './dto/get_posts.dto.js';
 import { SearchDto } from './dto/search.dto.js';
 
 @Controller('posts')
 export class PostsController {
-  constructor(
-    private readonly postsService: PostsService,
-    private chatGPT: ChatGPT,
-  ) {}
+  constructor(private readonly postsService: PostsService) {}
 
   @ApiOperation({ summary: '게시물 목록 조회' })
   @Get()

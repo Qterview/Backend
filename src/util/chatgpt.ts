@@ -1,8 +1,8 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Cron, CronExpression } from '@nestjs/schedule';
-import { ChatGPTError } from 'chatgpt';
-import { Model, startSession } from 'mongoose';
+import mongoose, { Model, startSession } from 'mongoose';
+import { Configuration, OpenAIApi } from 'openai';
 import { executablePath } from 'puppeteer';
 import { Post, PostDocument } from '../schemas/post.schema.js';
 import { Work, WorkDocument } from '../schemas/work.schemas.js';
@@ -14,7 +14,8 @@ export const importDynamic = new Function(
 
 @Injectable()
 export class ChatGPT {
-  gptApi: any;
+  gptApi_dev: any;
+  gptApi_prod: any;
   Working: boolean;
   private readonly logger = new Logger(ChatGPT.name);
 
@@ -26,7 +27,24 @@ export class ChatGPT {
   ) {}
 
   async onModuleInit() {
-    // await this.initGPT();
+    if (process.env.BUILD_ENV == 'developement') {
+      await this.initGPT();
+    } else {
+      await this.connectAI();
+    }
+  }
+
+  async connectAI() {
+    try {
+      const configuration = new Configuration({
+        apiKey: process.env.OPENAI_API_KEY,
+      });
+
+      const openai = new OpenAIApi(configuration);
+      this.gptApi_prod = openai;
+    } catch (e) {
+      console.log(e.message);
+    }
   }
 
   async initGPT() {
@@ -55,11 +73,10 @@ export class ChatGPT {
       this.logger.log('Sending test message');
       const result = await api.sendMessage('Hello World!');
       console.log(result.response);
-      this.gptApi = api;
+      this.gptApi_dev = api;
       this.work(); //작업시작
     } catch (e) {
       console.log(e);
-      console.log(e.name);
       this.initGPT();
     }
   }
@@ -67,10 +84,12 @@ export class ChatGPT {
   async work() {
     this.Working = true;
     while (true) {
-      // const session = await startSession();
+      console.log('1111111111111111111');
+      const session = await this.postModel.startSession();
       try {
         //트랜잭션 시작
-        // session.startTransaction();
+        session.startTransaction();
+        console.log('2222222222222222222222');
 
         //작업 검색
         const workData = await this.workModel.findOne({});
@@ -84,63 +103,76 @@ export class ChatGPT {
 
         //chatGPT 메세지 요청
         const result = await this.sendMessage(workData.work);
-
+        if (!result)
+          throw new Error(
+            'API에 문제가 생겼습니다. API가 연결된 이후 자동 실행됩니다.',
+          );
         //게시물 생성
         await this.postModel.create(
-          {
-            title: workData.work,
-            content: result.response,
-          },
-          // { session },
+          [
+            {
+              title: workData.work,
+              content: result,
+              useful: 0,
+            },
+          ],
+          { session },
         );
 
         //작업삭제
-        await this.workModel.deleteOne(
-          { _id: workData._id },
-          //  { session }
-        );
+        await this.workModel.deleteOne({ _id: workData._id }, { session });
 
         //트랜잭션 성공시 커밋후 세션 종료
-        // await session.commitTransaction();
-        // session.endSession();
+        await session.commitTransaction();
+        session.endSession();
       } catch (e) {
         //실패시 롤백후 세션 종료
-        // await session.abortTransaction();
-        // session.endSession();
+        await session.abortTransaction();
+        session.endSession();
         console.log(e);
-        console.log(e.name);
-        this.initGPT();
+        break;
       }
     }
   }
-  async sendMessage(
-    message: string,
-    conversationId?: string | undefined,
-    parentMessageId?: string | undefined,
-  ): Promise<{ response: string; conversationId: string; messageId: string }> {
+  async sendMessage(message: string): Promise<string> {
     this.logger.log(`Send Message ${message}`);
-    let response:
-      | { response: string; conversationId: string; messageId: string }
-      | undefined;
-    if (!conversationId) {
-      response = await this.gptApi.sendMessage(message, {
-        timeoutMs: 2 * 60 * 1000,
-      });
-    } else {
-      response = await this.gptApi.sendMessage(message, {
-        conversationId,
-        parentMessageId,
-        timeoutMs: 2 * 60 * 1000,
-      });
+    try {
+      //개발환경(브라우저기반API),
+      if (this.gptApi_dev) {
+        const data = await this.gptApi_dev.sendMessage(message, {
+          timeoutMs: 2 * 60 * 1000,
+        });
+
+        return data.response;
+      } else if (this.gptApi_prod) {
+        const response = await this.gptApi_prod.createCompletion({
+          model: 'text-davinci-003',
+          prompt: `Q: ${message}\nA:`,
+          temperature: 0,
+          max_tokens: 500,
+          top_p: 1,
+          stop: ['\n'],
+        });
+
+        return response.data.choices[0].text;
+      } else {
+        throw new Error('연결된 api가 없습니다.');
+      }
+    } catch (e) {
+      if (e.response) {
+        console.log(e.response.status);
+        console.log(e.response.data);
+      } else {
+        console.log(e.message);
+      }
     }
-    return response;
   }
 
   @Cron(CronExpression.EVERY_HOUR)
   async handleCron() {
     this.logger.debug('Refresh called every 1 hour');
-    if (this.gptApi) {
-      await this.gptApi.refreshSession();
+    if (this.gptApi_dev) {
+      await this.gptApi_dev.refreshSession();
     }
   }
 }

@@ -1,0 +1,16 @@
+version: '3.9'
+
+services:
+  nest:
+    image: pyo00/qterview:version3
+    ports:
+      - 80:3000
+    environment:
+      MONGODB: '${MONGODB}'
+      OPENAI_EMAIL: '${OPENAI_EMAIL}'
+      OPENAI_PASSWORD: '${OPENAI_PASSWORD}'
+      OPENAI_API_KEY: '${OPENAI_API_KEY}'
+      NOPECHAKE: '${NOPECHAKE}'
+      KEY: '${KEY}'
+      CERT: '${CERT}'
+      BUILD_ENV: '${BUILD_ENV}'

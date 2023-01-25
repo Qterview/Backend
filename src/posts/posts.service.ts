@@ -28,11 +28,16 @@ export class PostsService {
   ) {}
 
   async getPost(page: string): Promise<GetPostDto[]> {
-    const posts = await this.postModel
-      .find({})
-      .select({ title: 1, content: 1, useful: 1 });
+    const posts = await this.postModel.find({}).select({ title: 1, useful: 1 });
 
     return posts;
+  }
+
+  async postDetail(postId: string): Promise<GetPostDto> {
+    const post = await this.postModel
+      .findById(postId)
+      .select({ title: 1, content: 1, useful: 1 });
+    return post;
   }
 
   // 게시글 검색
@@ -55,7 +60,6 @@ export class PostsService {
         $project: {
           _id: 1,
           title: 1,
-          content: 1,
           useful: 1,
         },
       },

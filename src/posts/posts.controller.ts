@@ -20,7 +20,7 @@ export class PostsController {
 
   @ApiOperation({ summary: '게시물 목록 조회' })
   @Get()
-  getPost(@Query('page') page: string): Promise<GetPostDto[]> {
+  getPosts(@Query('page') page: string): Promise<GetPostDto[]> {
     return this.postsService.getPost(page);
   }
 
@@ -33,6 +33,11 @@ export class PostsController {
   @Get('search')
   search(@Body('search') search: SearchDto): Promise<GetPostDto[]> {
     return this.postsService.search(search);
+  }
+
+  @Get('/:id')
+  postDetail(@Param('id') postId: string): Promise<GetPostDto> {
+    return this.postsService.postDetail(postId);
   }
 
   @ApiOperation({ summary: '게시물 등록' })

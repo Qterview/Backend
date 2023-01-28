@@ -3,9 +3,11 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Cron, CronExpression } from '@nestjs/schedule';
 import mongoose, { Model, startSession } from 'mongoose';
 import { Configuration, OpenAIApi } from 'openai';
+
 import { executablePath } from 'puppeteer';
 import { Post, PostDocument } from '../schemas/post.schema';
 import { Work, WorkDocument } from '../schemas/work.schema';
+
 
 export const importDynamic = new Function(
   'modulePath',
@@ -61,7 +63,7 @@ export class ChatGPT {
         password: process.env.OPENAI_PASSWORD,
         markdown: process.env.CHATGPT_MARKDOWN || false,
         minimize: process.env.CHATGPT_MINIMIZE || false,
-        executablePath: executablePath(),
+        // executablePath: executablePath(),
         nopechaKey: process.env.NOPECHAKEY,
       });
       this.logger.log('Initing session for ChatGPT Browser');

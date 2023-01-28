@@ -5,7 +5,7 @@ WORKDIR /app
 
 COPY . .
 
-RUN npm install
+RUN npm install --silent
 
 RUN npm run build
 
@@ -16,7 +16,7 @@ FROM node:19-alpine
 
 WORKDIR /app
 
-ENV BUILD_ENV production
+ENV NODE_ENV production
 
 COPY --from=builder /app ./
 

@@ -10,9 +10,9 @@ import {
   HttpException,
 } from '@nestjs/common';
 import { ApiBody, ApiOperation, ApiResponse } from '@nestjs/swagger';
-import { PostsService } from './posts.service.js';
-import { GetPostDto } from './dto/get_posts.dto.js';
-import { SearchDto } from './dto/search.dto.js';
+import { PostsService } from './posts.service';
+import { GetPostDto } from './dto/get_posts.dto';
+import { SearchDto } from './dto/search.dto';
 
 @Controller('posts')
 export class PostsController {

@@ -4,8 +4,8 @@ import { Cron, CronExpression } from '@nestjs/schedule';
 import mongoose, { Model, startSession } from 'mongoose';
 import { Configuration, OpenAIApi } from 'openai';
 import { executablePath } from 'puppeteer';
-import { Post, PostDocument } from '../schemas/post.schema.js';
-import { Work, WorkDocument } from '../schemas/work.schemas.js';
+import { Post, PostDocument } from '../schemas/post.schema';
+import { Work, WorkDocument } from '../schemas/work.schema';
 
 export const importDynamic = new Function(
   'modulePath',

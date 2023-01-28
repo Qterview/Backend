@@ -5,8 +5,8 @@ import { PostsService } from './posts.service.js';
 import { HttpModule } from '@nestjs/axios';
 import { MongooseModule } from '@nestjs/mongoose';
 import { Post, PostSchema } from '../schemas/post.schema.js';
-import { Work, WorkSchema } from '../schemas/work.schemas.js';
-import { Like, LikeSchema } from '../schemas/like.schemas.js';
+import { Work, WorkSchema } from '../schemas/work.schema.js';
+import { Like, LikeSchema } from '../schemas/like.schema.js';
 import { ChatGPT } from '../util/chatgpt.js';
 // import {Queue} from '../util/queue.js'
 

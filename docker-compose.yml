@@ -6,6 +6,11 @@ services:
     ports:
       - 80:3000
     environment:
+      DB_HOST: '${DB_HOST}'
+      DB_PORT: '${DB_PORT}'
+      DB_USER: '${DB_USER}'
+      DB_NAME: '${DB_NAME}'
+      DB_PASSWORD: '${DB_PASSWORD}'
       MONGODB: '${MONGODB}'
       OPENAI_EMAIL: '${OPENAI_EMAIL}'
       OPENAI_PASSWORD: '${OPENAI_PASSWORD}'

@@ -137,9 +137,18 @@ export class ChatGPT {
     try {
       //개발환경(브라우저기반API),
       if (this.gptApi_dev) {
-        const data = await this.gptApi_dev.sendMessage(message, {
-          timeoutMs: 2 * 60 * 1000,
-        });
+        const data = await this.gptApi_dev.sendMessage(
+          `"---" 아래의 토픽에 대해 설명해줘.
+          아래의 옵션들을 지켜줘.
+          
+          - Style : 자세하게
+          - Reader level : 전문가
+          - Length : 500자
+          - Perspective : 개발자
+          - Answer me in Korean
+          ---
+          ${message}`,
+        );
 
         return data.response;
       } else if (this.gptApi_prod) {

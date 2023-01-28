@@ -3,6 +3,7 @@ import { PostsController } from './posts.controller';
 import { PostsService } from './posts.service';
 
 class MockUserService {}
+
 describe('PostsController', () => {
   let controller: PostsController;
 

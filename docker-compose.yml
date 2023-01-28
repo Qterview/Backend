@@ -15,7 +15,7 @@ services:
       OPENAI_EMAIL: '${OPENAI_EMAIL}'
       OPENAI_PASSWORD: '${OPENAI_PASSWORD}'
       OPENAI_API_KEY: '${OPENAI_API_KEY}'
-      NOPECHAKE: '${NOPECHAKE}'
+      NOPECHAKEY: '${NOPECHAKEY}'
       KEY: '${KEY}'
       CERT: '${CERT}'
       BUILD_ENV: '${BUILD_ENV}'

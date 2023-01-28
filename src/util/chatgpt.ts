@@ -84,12 +84,10 @@ export class ChatGPT {
   async work() {
     this.Working = true;
     while (true) {
-      console.log('1111111111111111111');
       const session = await this.postModel.startSession();
       try {
         //트랜잭션 시작
         session.startTransaction();
-        console.log('2222222222222222222222');
 
         //작업 검색
         const workData = await this.workModel.findOne({});

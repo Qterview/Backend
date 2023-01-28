@@ -3,12 +3,12 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { HttpService } from '@nestjs/axios';
 import { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
-import { Post, PostDocument } from '../schemas/post.schema.js';
-import { Work, WorkDocument } from '../schemas/work.schemas.js';
-import { Like, LikeDocument } from '../schemas/like.schemas.js';
-import { ChatGPT } from '../util/chatgpt.js';
-import { GetPostDto } from './dto/get_posts.dto.js';
-import { SearchDto } from './dto/search.dto.js';
+import { Post, PostDocument } from '../schemas/post.schema';
+import { Work, WorkDocument } from '../schemas/work.schema';
+import { Like, LikeDocument } from '../schemas/like.schema';
+import { ChatGPT } from '../util/chatgpt';
+import { GetPostDto } from './dto/get_posts.dto';
+import { SearchDto } from './dto/search.dto';
 
 // import {Queue} from '../util/queue.js'
 // import { Cron } from '@nestjs/schedule';

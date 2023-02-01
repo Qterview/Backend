@@ -33,6 +33,7 @@
     "@types/dotenv-safe": "^8.1.2",
     "bcrypt": "^5.1.0",
     "chatgpt": "^3.4.2",
+    "class-transformer": "^0.5.1",
     "class-validator": "^0.14.0",
     "config": "^3.3.8",
     "dotenv": "^16.0.3",

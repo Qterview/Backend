@@ -1,5 +1,6 @@
 import {
   IsBoolean,
+  IsMongoId,
   IsNotEmpty,
   IsNumber,
   IsOptional,
@@ -11,7 +12,7 @@ import {
 
 export class CreateUserDto {
   @IsNotEmpty({ message: '아이디를 입력해주세요' })
-  @IsString()
+  @IsMongoId()
   @MinLength(1)
   @MaxLength(20)
   Id: string;

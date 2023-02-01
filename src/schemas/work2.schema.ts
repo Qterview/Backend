@@ -1,5 +1,5 @@
 import { Prop, Schema, SchemaFactory, SchemaOptions } from '@nestjs/mongoose';
-import { HydratedDocument, Types } from 'mongoose';
+import { HydratedDocument } from 'mongoose';
 
 const options: SchemaOptions = {
   timestamps: true, //자동으로 등록일, 수정일을 넣어줍니다.
@@ -7,13 +7,10 @@ const options: SchemaOptions = {
 };
 
 @Schema(options)
-export class Like {
+export class Work2 {
   @Prop({ required: true })
-  postId: Types.ObjectId;
-
-  @Prop({ required: true })
-  clientIp: string;
+  work: string;
 }
 
-export const LikeSchema = SchemaFactory.createForClass(Like);
-export type LikeDocument = HydratedDocument<Like>;
+export const Work2Schema = SchemaFactory.createForClass(Work2);
+export type Work2Document = HydratedDocument<Work2>;

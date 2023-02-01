@@ -36,8 +36,8 @@ export class PostsController {
     type: Promise<GetPostDto[]>,
   })
   @Get('search')
-  search(@Body('search') search: SearchDto): Promise<GetPostDto[]> {
-    return this.postsService.search(search);
+  search(@Body() data: SearchDto): Promise<GetPostDto[]> {
+    return this.postsService.search(data);
   }
 
   @Get('/:id')

@@ -43,7 +43,8 @@ export class PostsService {
   }
 
   // 게시글 검색
-  async search(search: SearchDto): Promise<GetPostDto[]> {
+  async search(data: SearchDto): Promise<GetPostDto[]> {
+    const search = data.search;
     console.log(search);
     const posts = await this.postModel.aggregate([
       {

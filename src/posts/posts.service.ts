@@ -1,4 +1,4 @@
-import { HttpException, Inject, Injectable } from '@nestjs/common';
+import { HttpException, Injectable } from '@nestjs/common';
 import { HttpService } from '@nestjs/axios';
 import { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
@@ -7,8 +7,13 @@ import { Work, WorkDocument } from '../schemas/work.schema';
 import { Work2, Work2Document } from '../schemas/work2.schema';
 import { Like, LikeDocument } from '../schemas/like.schema';
 import { ChatGPT } from '../util/chatgpt';
-import { GetPostDto } from './dto/get_posts.dto';
-import { SearchDto, ObjectIdDto } from './dto/requests.dto';
+import { GetPostDetailDto, GetPostDto } from './dto/get_posts.dto';
+import {
+  SearchDto,
+  ObjectIdDto,
+  PageDto,
+  QuestionDto,
+} from './dto/requests.dto';
 
 // import {Queue} from '../util/queue.js'
 // import { Cron } from '@nestjs/schedule';
@@ -28,13 +33,15 @@ export class PostsService {
     private chatGPT: ChatGPT,
   ) {}
 
-  async getPost(page: string): Promise<GetPostDto[]> {
+  async getPost(query: PageDto): Promise<GetPostDto[]> {
+    const page = query.page;
+    console.log(typeof page);
     const posts = await this.postModel.find({}).select({ title: 1, useful: 1 });
 
     return posts;
   }
 
-  async postDetail(param: ObjectIdDto): Promise<GetPostDto> {
+  async postDetail(param: ObjectIdDto): Promise<GetPostDetailDto> {
     const postId = param.id;
     const post = await this.postModel
       .findById(postId)
@@ -43,7 +50,8 @@ export class PostsService {
   }
 
   // 게시글 검색
-  async search(search: SearchDto): Promise<GetPostDto[]> {
+  async search(data: SearchDto): Promise<GetPostDto[]> {
+    const search = data.search;
     console.log(search);
     const posts = await this.postModel.aggregate([
       {
@@ -76,7 +84,8 @@ export class PostsService {
   }
 
   //게시물 등록
-  async createPost(question: string) {
+  async createPost(data: QuestionDto) {
+    const question = data.question;
     try {
       if (this.chatGPT.balance) {
         this.chatGPT.balance = 0;

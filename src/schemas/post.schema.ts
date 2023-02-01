@@ -23,6 +23,7 @@ export class Post {
   content: string;
 
   @ApiProperty({
+    example: 3,
     description: '게시물 추천수',
   })
   @Prop({ required: true })

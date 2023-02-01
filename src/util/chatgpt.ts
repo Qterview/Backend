@@ -7,6 +7,7 @@ import { Configuration, OpenAIApi } from 'openai';
 import { executablePath } from 'puppeteer';
 import { Post, PostDocument } from '../schemas/post.schema';
 import { Work, WorkDocument } from '../schemas/work.schema';
+import { Work2, Work2Document } from '../schemas/work2.schema';
 
 
 export const importDynamic = new Function(
@@ -17,8 +18,12 @@ export const importDynamic = new Function(
 @Injectable()
 export class ChatGPT {
   gptApi_dev: any;
-  gptApi_prod: any;
-  Working: boolean;
+  gptApi_prod_A: any;
+  gptApi_prod_B: any;
+  Working_A: boolean;
+  Working_B: boolean;
+  balance: number;
+
   private readonly logger = new Logger(ChatGPT.name);
 
   constructor(
@@ -26,6 +31,8 @@ export class ChatGPT {
     private postModel: Model<PostDocument>,
     @InjectModel(Work.name)
     private workModel: Model<WorkDocument>,
+    @InjectModel(Work2.name)
+    private work2Model: Model<Work2Document>,
   ) {}
 
   async onModuleInit() {
@@ -38,12 +45,17 @@ export class ChatGPT {
 
   async connectAI() {
     try {
-      const configuration = new Configuration({
-        apiKey: process.env.OPENAI_API_KEY,
+      const configuration_A = new Configuration({
+        apiKey: process.env.OPENAI_API_KEY_A,
+      });
+      const configuration_B = new Configuration({
+        apiKey: process.env.OPENAI_API_KEY_B,
       });
 
-      const openai = new OpenAIApi(configuration);
-      this.gptApi_prod = openai;
+      const openai_A = new OpenAIApi(configuration_A);
+      const openai_B = new OpenAIApi(configuration_B);
+      this.gptApi_prod_A = openai_A;
+      this.gptApi_prod_B = openai_B;
     } catch (e) {
       console.log(e.message);
     }
@@ -76,33 +88,39 @@ export class ChatGPT {
       const result = await api.sendMessage('Hello World!');
       console.log(result.response);
       this.gptApi_dev = api;
-      this.work(); //작업시작
+      this.work_A(); //작업시작
+      this.work_B();
     } catch (e) {
       console.log(e);
       this.initGPT();
     }
   }
 
-  async work() {
-    this.Working = true;
+  //작업A
+  async work_A() {
+    this.Working_A = true;
     while (true) {
       const session = await this.postModel.startSession();
+      console.log('작업_A: 세션정의');
       try {
         //트랜잭션 시작
         session.startTransaction();
+        console.log('작업_A: 세션시작');
 
         //작업 검색
         const workData = await this.workModel.findOne({});
-
+        console.log('작업_A: 작업 검색');
         //작업이 없을시 종료
         if (!workData) {
-          this.logger.log('작업이 없습니다.');
-          this.Working = false;
+          this.logger.log('A작업이 없습니다.');
+          this.Working_A = false;
           break;
         }
 
         //chatGPT 메세지 요청
+        console.log('작업_A: 메세지 요청');
         const result = await this.sendMessage(workData.work);
+        console.log('작업_A: 메세지 요청 받아옴');
         if (!result)
           throw new Error(
             'API에 문제가 생겼습니다. API가 연결된 이후 자동 실행됩니다.',
@@ -118,13 +136,16 @@ export class ChatGPT {
           ],
           { session },
         );
+        console.log('작업_A: 게시물 생성');
 
         //작업삭제
         await this.workModel.deleteOne({ _id: workData._id }, { session });
+        console.log('작업_A: 작업 삭제');
 
         //트랜잭션 성공시 커밋후 세션 종료
         await session.commitTransaction();
         session.endSession();
+        console.log('작업_A: 트랜잭션 종료');
       } catch (e) {
         //실패시 롤백후 세션 종료
         await session.abortTransaction();
@@ -134,6 +155,67 @@ export class ChatGPT {
       }
     }
   }
+
+  //작업 B
+  async work_B() {
+    this.Working_B = true;
+    while (true) {
+      const session = await this.postModel.startSession();
+      console.log('작업_B: 세션정의');
+      try {
+        //트랜잭션 시작
+        session.startTransaction();
+        console.log('작업_B: 세션시작');
+
+        //작업 검색
+        const workData = await this.work2Model.findOne({});
+        console.log('작업_B: 작업 검색');
+        //작업이 없을시 종료
+        if (!workData) {
+          this.logger.log('B작업이 없습니다.');
+          this.Working_B = false;
+          break;
+        }
+
+        //chatGPT 메세지 요청
+        console.log('작업_B: 메세지 요청');
+        const result = await this.sendMessage(workData.work);
+        console.log('작업_B: 메세지 요청 받아옴');
+        if (!result)
+          throw new Error(
+            'API에 문제가 생겼습니다. API가 연결된 이후 자동 실행됩니다.',
+          );
+        //게시물 생성
+        await this.postModel.create(
+          [
+            {
+              title: workData.work,
+              content: result,
+              useful: 0,
+            },
+          ],
+          { session },
+        );
+        console.log('작업_B: 게시물 생성');
+
+        //작업삭제
+        await this.work2Model.deleteOne({ _id: workData._id }, { session });
+        console.log('작업_B: 작업 삭제');
+
+        //트랜잭션 성공시 커밋후 세션 종료
+        await session.commitTransaction();
+        session.endSession();
+        console.log('작업_B: 트랜잭션 종료');
+      } catch (e) {
+        //실패시 롤백후 세션 종료
+        await session.abortTransaction();
+        session.endSession();
+        console.log(e);
+        break;
+      }
+    }
+  }
+
   async sendMessage(message: string): Promise<string> {
     this.logger.log(`Send Message ${message}`);
     try {
@@ -153,8 +235,8 @@ export class ChatGPT {
         );
 
         return data.response;
-      } else if (this.gptApi_prod) {
-        const response = await this.gptApi_prod.createCompletion({
+      } else if (this.gptApi_prod_B) {
+        const response = await this.gptApi_prod_B.createCompletion({
           model: 'text-davinci-003',
           prompt: `Q: ${message}\nA:`,
           temperature: 0,
@@ -179,8 +261,8 @@ export class ChatGPT {
 
   @Cron(CronExpression.EVERY_HOUR)
   async handleCron() {
-    this.logger.debug('Refresh called every 1 hour');
     if (this.gptApi_dev) {
+      this.logger.debug('Refresh called every 1 hour');
       await this.gptApi_dev.refreshSession();
     }
   }

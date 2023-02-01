@@ -8,11 +8,16 @@ import {
   Res,
   Ip,
   HttpException,
+  UseInterceptors,
+  UsePipes,
+  ValidationPipe,
 } from '@nestjs/common';
 import { ApiBody, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { PostsService } from './posts.service';
 import { GetPostDto } from './dto/get_posts.dto';
-import { SearchDto } from './dto/search.dto';
+import { SearchDto, ObjectIdDto } from './dto/requests.dto';
+
+import { UndefinedToNullInterceptor } from '../common/undefinedToNull.interceptor';
 
 @Controller('posts')
 export class PostsController {
@@ -36,26 +41,31 @@ export class PostsController {
   }
 
   @Get('/:id')
-  postDetail(@Param('id') postId: string): Promise<GetPostDto> {
-    return this.postsService.postDetail(postId);
+  postDetail(@Param() param: ObjectIdDto): Promise<GetPostDto> {
+    return this.postsService.postDetail(param);
   }
 
+  @UseInterceptors(UndefinedToNullInterceptor)
   @ApiOperation({ summary: '게시물 등록' })
   @Post()
   createPost(@Body('question') question: string) {
     this.postsService.createPost(question);
-    return '질문요청 완료';
+    return '질문등록 요청 완료';
   }
 
+  @UseInterceptors(UndefinedToNullInterceptor)
   @ApiOperation({ summary: '게시물 추천' })
   @Post('like/:id')
-  async likePost(@Param('id') postId: string, @Ip() clientIp: any) {
-    return await this.postsService.likePost(postId, clientIp);
+  async likePost(@Param() param: ObjectIdDto, @Ip() clientIp: string) {
+    console.log(param.id);
+    console.log(typeof clientIp);
+    return await this.postsService.likePost(param, clientIp);
   }
 
+  @UseInterceptors(UndefinedToNullInterceptor)
   @ApiOperation({ summary: '게시물 비추천' })
   @Post('unlike/:id')
-  async UnlikePost(@Param('id') postId: string, @Ip() clientIp: any) {
-    return await this.postsService.UnlikePost(postId, clientIp);
+  async UnlikePost(@Param() param: ObjectIdDto, @Ip() clientIp: string) {
+    return await this.postsService.UnlikePost(param, clientIp);
   }
 }

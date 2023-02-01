@@ -5,17 +5,18 @@ import {
   Body,
   Query,
   Param,
-  Res,
   Ip,
-  HttpException,
   UseInterceptors,
-  UsePipes,
-  ValidationPipe,
 } from '@nestjs/common';
-import { ApiBody, ApiOperation, ApiResponse } from '@nestjs/swagger';
+import { ApiOkResponse, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { PostsService } from './posts.service';
-import { GetPostDto } from './dto/get_posts.dto';
-import { SearchDto, ObjectIdDto } from './dto/requests.dto';
+import { GetPostDetailDto, GetPostDto } from './dto/get_posts.dto';
+import {
+  SearchDto,
+  ObjectIdDto,
+  PageDto,
+  QuestionDto,
+} from './dto/requests.dto';
 
 import { UndefinedToNullInterceptor } from '../common/undefinedToNull.interceptor';
 
@@ -24,32 +25,46 @@ export class PostsController {
   constructor(private readonly postsService: PostsService) {}
 
   @ApiOperation({ summary: '게시물 목록 조회' })
+  @ApiResponse({
+    status: 200,
+    description: '성공',
+    type: GetPostDto,
+    isArray: true,
+  })
   @Get()
-  getPosts(@Query('page') page: string): Promise<GetPostDto[]> {
-    return this.postsService.getPost(page);
+  getPosts(@Query() query: PageDto): Promise<GetPostDto[]> {
+    return this.postsService.getPost(query);
   }
 
   @ApiOperation({ summary: '게시물 검색' })
   @ApiResponse({
     status: 200,
     description: '성공',
-    type: Promise<GetPostDto[]>,
+    type: GetPostDto,
+    isArray: true,
   })
   @Get('search')
   search(@Body() data: SearchDto): Promise<GetPostDto[]> {
     return this.postsService.search(data);
   }
 
+  @ApiOperation({ summary: '게시물 상세조회' })
   @Get('/:id')
-  postDetail(@Param() param: ObjectIdDto): Promise<GetPostDto> {
+  @ApiResponse({
+    status: 200,
+    description: '조회 성공',
+    type: GetPostDetailDto,
+  })
+  postDetail(@Param() param: ObjectIdDto): Promise<GetPostDetailDto> {
     return this.postsService.postDetail(param);
   }
 
   @UseInterceptors(UndefinedToNullInterceptor)
   @ApiOperation({ summary: '게시물 등록' })
+  @ApiOkResponse({ description: '질문등록 요청 완료' })
   @Post()
-  createPost(@Body('question') question: string) {
-    this.postsService.createPost(question);
+  createPost(@Body() data: QuestionDto) {
+    this.postsService.createPost(data);
     return '질문등록 요청 완료';
   }
 

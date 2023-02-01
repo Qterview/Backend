@@ -99,15 +99,13 @@ export class ChatGPT {
     this.Working_A = true;
     while (true) {
       const session = await this.postModel.startSession();
-      console.log('작업_A: 세션정의');
       try {
         //트랜잭션 시작
         session.startTransaction();
-        console.log('작업_A: 세션시작');
 
         //작업 검색
         const workData = await this.workModel.findOne({});
-        console.log('작업_A: 작업 검색');
+
         //작업이 없을시 종료
         if (!workData) {
           this.logger.log('A작업이 없습니다.');
@@ -116,9 +114,8 @@ export class ChatGPT {
         }
 
         //chatGPT 메세지 요청
-        console.log('작업_A: 메세지 요청');
         const result = await this.sendMessage(workData.work);
-        console.log('작업_A: 메세지 요청 받아옴');
+
         if (!result)
           throw new Error(
             'API에 문제가 생겼습니다. API가 연결된 이후 자동 실행됩니다.',
@@ -134,16 +131,12 @@ export class ChatGPT {
           ],
           { session },
         );
-        console.log('작업_A: 게시물 생성');
-
         //작업삭제
         await this.workModel.deleteOne({ _id: workData._id }, { session });
-        console.log('작업_A: 작업 삭제');
 
         //트랜잭션 성공시 커밋후 세션 종료
         await session.commitTransaction();
         session.endSession();
-        console.log('작업_A: 트랜잭션 종료');
       } catch (e) {
         //실패시 롤백후 세션 종료
         await session.abortTransaction();
@@ -159,15 +152,14 @@ export class ChatGPT {
     this.Working_B = true;
     while (true) {
       const session = await this.postModel.startSession();
-      console.log('작업_B: 세션정의');
+
       try {
         //트랜잭션 시작
         session.startTransaction();
-        console.log('작업_B: 세션시작');
 
         //작업 검색
         const workData = await this.work2Model.findOne({});
-        console.log('작업_B: 작업 검색');
+
         //작업이 없을시 종료
         if (!workData) {
           this.logger.log('B작업이 없습니다.');
@@ -176,9 +168,7 @@ export class ChatGPT {
         }
 
         //chatGPT 메세지 요청
-        console.log('작업_B: 메세지 요청');
         const result = await this.sendMessage(workData.work);
-        console.log('작업_B: 메세지 요청 받아옴');
         if (!result)
           throw new Error(
             'API에 문제가 생겼습니다. API가 연결된 이후 자동 실행됩니다.',
@@ -194,16 +184,13 @@ export class ChatGPT {
           ],
           { session },
         );
-        console.log('작업_B: 게시물 생성');
 
         //작업삭제
         await this.work2Model.deleteOne({ _id: workData._id }, { session });
-        console.log('작업_B: 작업 삭제');
 
         //트랜잭션 성공시 커밋후 세션 종료
         await session.commitTransaction();
         session.endSession();
-        console.log('작업_B: 트랜잭션 종료');
       } catch (e) {
         //실패시 롤백후 세션 종료
         await session.abortTransaction();

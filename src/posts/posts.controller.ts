@@ -18,7 +18,7 @@ import {
   QuestionDto,
 } from './dto/requests.dto';
 
-import { UndefinedToNullInterceptor } from '../common/undefinedToNull.interceptor';
+import { UndefinedToNullInterceptor } from '../common/Data_repack.interceptor';
 
 @Controller('posts')
 export class PostsController {

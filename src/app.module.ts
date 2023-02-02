@@ -17,7 +17,7 @@ import { ScheduleModule } from '@nestjs/schedule';
       useUnifiedTopology: true, // 몽구스에서 필요로 하는 두 번째 인자 -2
       dbName: 'Qterview',
     }),
-    // UserModule,
+    UserModule,
     PostsModule,
     ScheduleModule.forRoot(),
   ],

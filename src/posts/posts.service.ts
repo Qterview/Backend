@@ -86,11 +86,13 @@ export class PostsService {
         $project: {
           _id: 1,
           title: 1,
+          content: 1,
           useful: 1,
           score: { $meta: 'searchScore' },
         },
       },
     ]);
+    console.log(posts)
     return posts;
   }
 

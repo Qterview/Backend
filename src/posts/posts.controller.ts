@@ -46,6 +46,7 @@ export class PostsController {
   })
   @Get('search/:q')
   search(@Param('q') q: string): Promise<GetPostDto[]> {
+    console.log(q)
     return this.postsService.search(q);
   }
 

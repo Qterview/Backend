@@ -19,9 +19,7 @@ import {
 // import { Cron } from '@nestjs/schedule';
 @Injectable()
 export class PostsService {
-  private SIGN: number;
   constructor(
-    private readonly httpService: HttpService,
     @InjectModel(Post.name)
     private postModel: Model<PostDocument>,
     @InjectModel(Work.name)

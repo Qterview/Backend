@@ -66,12 +66,11 @@ describe('PostsService', () => {
     expect(await service.getPost({ page: 0 })).toStrictEqual(posts);
   });
 
-  it('getPost호출시 게시글 return', async () => {
+  it('postDetail  호출시 게시글 return', async () => {
     const post = {
       title: '트랜잭션에 대해 설명하세요',
       content: '...설명 내용',
     };
-
     expect(
       await service.postDetail({ id: '63c498f674390c392b31885c' }),
     ).toStrictEqual(post);

@@ -36,6 +36,7 @@ export class PostsController {
     return this.postsService.getPost(query);
   }
 
+  //검섹어 조회
   @ApiOperation({ summary: '게시물 검색' })
   @ApiResponse({
     status: 200,
@@ -43,10 +44,18 @@ export class PostsController {
     type: GetPostDto,
     isArray: true,
   })
-  @Get('search')
-  search(@Body() data: SearchDto): Promise<GetPostDto[]> {
-    return this.postsService.search(data);
+  @Get('search/:q')
+  search(@Param('q') q: string): Promise<GetPostDto[]> {
+    return this.postsService.search(q);
   }
+
+
+  //전체 목록 조회
+  @Get('list')
+  getAllPost(){
+    return this.postsService.getAllPost()
+  }
+
 
   @ApiOperation({ summary: '게시물 상세조회' })
   @Get('/:id')

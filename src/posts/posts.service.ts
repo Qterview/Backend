@@ -41,6 +41,18 @@ export class PostsService {
     return posts;
   }
 
+  async getAllPost(){
+    const list = await this.postModel.find();
+    return list.map(v => {
+      return {
+        id : v._id, 
+        question : v.title,
+        answer: v.content,
+        like: v.useful
+      }
+    })
+  }
+
   async postDetail(param: ObjectIdDto): Promise<GetPostDetailDto> {
     const postId = param.id;
     const post = await this.postModel
@@ -50,9 +62,8 @@ export class PostsService {
   }
 
   // 게시글 검색
-  async search(data: SearchDto): Promise<GetPostDto[]> {
-    const search = data.search;
-    console.log(search);
+  async search(q: string): Promise<GetPostDto[]> {
+    const search = q
     const posts = await this.postModel.aggregate([
       {
         $search: {

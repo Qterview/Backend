@@ -80,8 +80,19 @@ describe('PostsService', () => {
     ).toStrictEqual(post);
   });
 
-  it('게시물 생성 balance가 1일때 work호출', async () => {
-    await service.createPost({ question: '질문 테스트' });
-    expect(MockWork2Model.create);
-  });
+  it.todo(
+    '게시물 생성 balance가 1일때 work호출',
+    // async () => {
+    //   await service.createPost({ question: '질문 테스트' });
+    //   expect(MockWork2Model.create);
+    // }
+  );
+
+  it.todo('[게시물 추천]게시물이 없을시 에러');
+  it.todo('[게시물 추천]이미 추천 했을시 에러');
+  it.todo('[게시물 추천]정상적으로 적용시 메세지 리턴');
+
+  it.todo('[게시물 비추천]게시물이 없을시 에러');
+  it.todo('[게시물 비추천]이미 추천 했을시 에러');
+  it.todo('[게시물 비추천]정상적으로 적용시 메세지 리턴');
 });

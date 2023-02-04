@@ -32,8 +32,12 @@ describe('PostsService', () => {
       };
     }
   }
-  class MockWorkModel {}
-  class MockWork2Model {}
+  class MockWorkModel {
+    create = jest.fn();
+  }
+  class MockWork2Model {
+    create = jest.fn();
+  }
   class MockLikeModel {}
 
   class MockChatGPT {}
@@ -74,5 +78,10 @@ describe('PostsService', () => {
     expect(
       await service.postDetail({ id: '63c498f674390c392b31885c' }),
     ).toStrictEqual(post);
+  });
+
+  it('게시물 생성 balance가 1일때 work호출', async () => {
+    await service.createPost({ question: '질문 테스트' });
+    expect(MockWork2Model.create);
   });
 });

@@ -99,6 +99,7 @@ export class PostsService {
   async createPost(data: QuestionDto) {
     const question = data.question;
     try {
+      //작업 분할
       if (this.chatGPT.balance) {
         this.chatGPT.balance = 0;
 

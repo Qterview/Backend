@@ -72,8 +72,6 @@ export class PostsController {
   @ApiOperation({ summary: '게시물 추천' })
   @Post('like/:id')
   async likePost(@Param() param: ObjectIdDto, @Ip() clientIp: string) {
-    console.log(param.id);
-    console.log(typeof clientIp);
     return await this.postsService.likePost(param, clientIp);
   }
 

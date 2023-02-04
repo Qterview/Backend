@@ -19,9 +19,7 @@ import {
 // import { Cron } from '@nestjs/schedule';
 @Injectable()
 export class PostsService {
-  private SIGN: number;
   constructor(
-    private readonly httpService: HttpService,
     @InjectModel(Post.name)
     private postModel: Model<PostDocument>,
     @InjectModel(Work.name)
@@ -33,6 +31,10 @@ export class PostsService {
     private chatGPT: ChatGPT,
   ) {}
 
+  /**게시글 목록
+   * @param {PageDto} query 불러올 게시글 페이지
+   * @returns 게시글 목록 리스트
+   */
   async getPost(query: PageDto): Promise<GetPostDto[]> {
     const page = query.page;
     console.log(typeof page);
@@ -41,6 +43,10 @@ export class PostsService {
     return posts;
   }
 
+  /** 게시글 상세 조회
+   * @param {ObjectIdDto} param 불러올 게시글 ID
+   * @returns 게시글 상세 정보
+   */
   async postDetail(param: ObjectIdDto): Promise<GetPostDetailDto> {
     const postId = param.id;
     const post = await this.postModel
@@ -49,7 +55,10 @@ export class PostsService {
     return post;
   }
 
-  // 게시글 검색
+  /** 게시글 검색
+   * @param {SearchDto} data 검색할 데이터
+   * @returns 검색 결과 게시물 리스트
+   */
   async search(data: SearchDto): Promise<GetPostDto[]> {
     const search = data.search;
     console.log(search);
@@ -83,10 +92,14 @@ export class PostsService {
     return posts;
   }
 
-  //게시물 등록
+  /** 게시물 등록
+   * @param {QuestionDto} data 게시물 생성할 질문
+   * @return 게시물 생성 요청을 추가하고 리턴함
+   */
   async createPost(data: QuestionDto) {
     const question = data.question;
     try {
+      //작업 분할
       if (this.chatGPT.balance) {
         this.chatGPT.balance = 0;
 
@@ -105,24 +118,37 @@ export class PostsService {
     }
   }
 
+  /** 게시물 추천
+   * @param {ObjectIdDto} param 추천할 게시물 ID
+   * @return 정상적인 메세지를 리턴함
+   */
   async likePost(param: ObjectIdDto, clientIp: string) {
     const postId = param.id;
-    console.log(typeof postId);
-    const exist = await this.likeModel.findOne({ postId, clientIp });
 
-    if (exist) throw new HttpException('이미 평가했습니다', 400);
+    const existPost = await this.postModel.findById(postId);
+    if (!existPost) throw new HttpException('존재하지 않는 게시글 입니다', 400);
+
+    const existLike = await this.likeModel.findOne({ postId, clientIp });
+    if (existLike) throw new HttpException('이미 평가했습니다', 400);
+
     await this.likeModel.create({ postId, clientIp });
     await this.postModel.findByIdAndUpdate(postId, { $inc: { useful: 1 } });
     return '평가완료';
   }
 
+  /** 게시물 비추천
+   * @param {ObjectIdDto} param 추천할 게시물 ID
+   * @return 정상적인 메세지를 리턴함
+   */
   async UnlikePost(param: ObjectIdDto, clientIp: string) {
     const postId = param.id;
-    console.log('검색 전');
-    const exist = await this.likeModel.findOne({ postId, clientIp });
-    console.log('검색 후');
 
-    if (exist) throw new HttpException('이미 평가했습니다', 400);
+    const existPost = await this.postModel.findById(postId);
+    if (!existPost) throw new HttpException('존재하지 않는 게시글 입니다', 400);
+
+    const existLike = await this.likeModel.findOne({ postId, clientIp });
+    if (existLike) throw new HttpException('이미 평가했습니다', 400);
+
     await this.likeModel.create({ postId, clientIp });
     await this.postModel.findByIdAndUpdate(postId, { $inc: { useful: -1 } });
     return '평가완료';

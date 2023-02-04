@@ -1,5 +1,4 @@
 import { Module } from '@nestjs/common';
-import { UserModule } from './user/user.module.js';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { PostsModule } from './posts/posts.module.js';
 import { MongooseModule } from '@nestjs/mongoose';
@@ -17,7 +16,6 @@ import { ScheduleModule } from '@nestjs/schedule';
       useUnifiedTopology: true, // 몽구스에서 필요로 하는 두 번째 인자 -2
       dbName: 'Qterview',
     }),
-    UserModule,
     PostsModule,
     ScheduleModule.forRoot(),
   ],

@@ -124,10 +124,13 @@ export class PostsService {
    */
   async likePost(param: ObjectIdDto, clientIp: string) {
     const postId = param.id;
-    console.log(typeof postId);
-    const exist = await this.likeModel.findOne({ postId, clientIp });
 
-    if (exist) throw new HttpException('이미 평가했습니다', 400);
+    const existPost = await this.postModel.findById(postId);
+    if (!existPost) throw new HttpException('존재하지 않는 게시글 입니다', 400);
+
+    const existLike = await this.likeModel.findOne({ postId, clientIp });
+    if (existLike) throw new HttpException('이미 평가했습니다', 400);
+
     await this.likeModel.create({ postId, clientIp });
     await this.postModel.findByIdAndUpdate(postId, { $inc: { useful: 1 } });
     return '평가완료';
@@ -139,11 +142,13 @@ export class PostsService {
    */
   async UnlikePost(param: ObjectIdDto, clientIp: string) {
     const postId = param.id;
-    console.log('검색 전');
-    const exist = await this.likeModel.findOne({ postId, clientIp });
-    console.log('검색 후');
 
-    if (exist) throw new HttpException('이미 평가했습니다', 400);
+    const existPost = await this.postModel.findById(postId);
+    if (!existPost) throw new HttpException('존재하지 않는 게시글 입니다', 400);
+
+    const existLike = await this.likeModel.findOne({ postId, clientIp });
+    if (existLike) throw new HttpException('이미 평가했습니다', 400);
+
     await this.likeModel.create({ postId, clientIp });
     await this.postModel.findByIdAndUpdate(postId, { $inc: { useful: -1 } });
     return '평가완료';

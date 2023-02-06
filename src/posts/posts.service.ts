@@ -57,7 +57,7 @@ export class PostsService {
     const postId = param.id;
     const post = await this.postModel
       .findById(postId)
-      .select({ title: 1, content: 1, useful: 1 });
+      .select({ title: 1, content: 1, useful: 1, createAt: 1 });
     return post;
   }
 

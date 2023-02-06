@@ -66,8 +66,10 @@ export class PostsController {
     type: GetPostDetailDto,
   })
   postDetail(@Param() param: ObjectIdDto): Promise<GetPostDetailDto> {
+    console.log(param)
     return this.postsService.postDetail(param);
   }
+  
 
   @UseInterceptors(UndefinedToNullInterceptor)
   @ApiOperation({ summary: '게시물 등록' })

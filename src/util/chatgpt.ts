@@ -10,8 +10,6 @@ import { Post, PostDocument } from '../schemas/post.schema';
 import { Work, WorkDocument } from '../schemas/work.schema';
 import { Work2, Work2Document } from '../schemas/work2.schema';
 
-
-
 export const importDynamic = new Function(
   'modulePath',
   'return import(modulePath)',
@@ -36,7 +34,7 @@ export class ChatGPT {
     @InjectModel(Work2.name)
     private work2Model: Model<Work2Document>,
 
-    private socketGateway: SocketGateway
+    private socketGateway: SocketGateway,
   ) {}
 
   async onModuleInit() {
@@ -131,7 +129,7 @@ export class ChatGPT {
           );
 
         //게시물 생성
-        await this.postModel.create(
+        const data = await this.postModel.create(
           [
             {
               title: workData.work,
@@ -141,13 +139,14 @@ export class ChatGPT {
           ],
           { session },
         );
+        const postId = data[0]._id;
         //작업삭제
         await this.workModel.deleteOne({ _id: workData._id }, { session });
 
         //트랜잭션 성공시 커밋후 세션 종료
         await session.commitTransaction();
         session.endSession();
-        this.socketGateway.alarmEvent({data : workData.work});
+        this.socketGateway.alarmEvent({ data: workData.work, id: postId });
       } catch (e) {
         //실패시 롤백후 세션 종료
         await session.abortTransaction();
@@ -186,7 +185,7 @@ export class ChatGPT {
           );
 
         //게시물 생성
-        await this.postModel.create(
+        const data = await this.postModel.create(
           [
             {
               title: workData.work,
@@ -196,6 +195,7 @@ export class ChatGPT {
           ],
           { session },
         );
+        const postId = data[0]._id;
 
         //작업삭제
         await this.work2Model.deleteOne({ _id: workData._id }, { session });
@@ -203,7 +203,7 @@ export class ChatGPT {
         //트랜잭션 성공시 커밋후 세션 종료
         await session.commitTransaction();
         session.endSession();
-        this.socketGateway.alarmEvent({data : workData.work});
+        this.socketGateway.alarmEvent({ data: workData.work, id: postId });
       } catch (e) {
         //실패시 롤백후 세션 종료
         await session.abortTransaction();

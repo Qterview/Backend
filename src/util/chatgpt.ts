@@ -5,6 +5,7 @@ import mongoose, { Model, startSession } from 'mongoose';
 import { Configuration, OpenAIApi } from 'openai';
 
 import { executablePath } from 'puppeteer';
+import { SocketGateway } from '../socket/socket.gateway';
 import { Post, PostDocument } from '../schemas/post.schema';
 import { Work, WorkDocument } from '../schemas/work.schema';
 import { Work2, Work2Document } from '../schemas/work2.schema';
@@ -33,6 +34,8 @@ export class ChatGPT {
     private workModel: Model<WorkDocument>,
     @InjectModel(Work2.name)
     private work2Model: Model<Work2Document>,
+
+    private socketGateway: SocketGateway
   ) {}
 
   async onModuleInit() {
@@ -139,6 +142,7 @@ export class ChatGPT {
         //트랜잭션 성공시 커밋후 세션 종료
         await session.commitTransaction();
         session.endSession();
+        this.socketGateway.alarmEvent({data : workData.work});
       } catch (e) {
         //실패시 롤백후 세션 종료
         await session.abortTransaction();
@@ -193,6 +197,7 @@ export class ChatGPT {
         //트랜잭션 성공시 커밋후 세션 종료
         await session.commitTransaction();
         session.endSession();
+        this.socketGateway.alarmEvent({data : workData.work});
       } catch (e) {
         //실패시 롤백후 세션 종료
         await session.abortTransaction();

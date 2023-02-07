@@ -38,10 +38,24 @@ export class PostsService {
   async getPost(query: PageDto): Promise<GetPostDto[]> {
     const page = query.page;
     console.log(typeof page);
-    const posts = await this.postModel.find({}).select({ title: 1, useful: 1 });
-
+    const posts = await this.postModel
+      .find({})
+      .select({ title: 1, useful: 1, content: 1 });
     return posts;
   }
+
+  async getAllPost(){
+    const list = await this.postModel.find();
+    return list.map(v => {
+      return {
+        id : v._id, 
+        question : v.title,
+        answer: v.content,
+        like: v.useful
+      }
+    })
+  }
+
 
   /** 게시글 상세 조회
    * @param {ObjectIdDto} param 불러올 게시글 ID

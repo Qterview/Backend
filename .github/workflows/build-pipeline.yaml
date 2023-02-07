@@ -57,4 +57,5 @@ jobs:
           username: ubuntu
           key: ${{ secrets.PRIVATE_KEY }}
           port: 22
-          script: 'docker-compose pull && docker-compose up -d && docker system prune -a && y'
+          script: 'docker-compose pull && docker-compose up -d && docker system prune -a'
+          script: 'y'

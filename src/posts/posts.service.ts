@@ -43,6 +43,19 @@ export class PostsService {
     return posts;
   }
 
+  async getAllPost(){
+    const list = await this.postModel.find();
+    return list.map(v => {
+      return {
+        id : v._id, 
+        question : v.title,
+        answer: v.content,
+        like: v.useful
+      }
+    })
+  }
+
+
   /** 게시글 상세 조회
    * @param {ObjectIdDto} param 불러올 게시글 ID
    * @returns 게시글 상세 정보

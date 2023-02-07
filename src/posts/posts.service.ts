@@ -38,8 +38,9 @@ export class PostsService {
   async getPost(query: PageDto): Promise<GetPostDto[]> {
     const page = query.page;
     console.log(typeof page);
-    const posts = await this.postModel.find({}).select({ title: 1, useful: 1 });
-
+    const posts = await this.postModel
+      .find({})
+      .select({ title: 1, useful: 1, content: 1 });
     return posts;
   }
 

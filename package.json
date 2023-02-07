@@ -34,6 +34,7 @@
     "@nestjs/websockets": "^9.2.1",
     "@types/bcrypt": "^5.0.0",
     "@types/dotenv-safe": "^8.1.2",
+    "@types/ws": "^8.5.4",
     "bcrypt": "^5.1.0",
     "chatgpt": "^3.4.2",
     "class-transformer": "^0.5.1",
@@ -52,11 +53,12 @@
     "socket.io": "^4.5.4",
     "swagger-ui-express": "^4.6.0",
     "typeorm": "^0.3.11",
-    "upgrade": "^1.1.0"
+    "upgrade": "^1.1.0",
+    "ws": "^8.12.0"
   },
   "devDependencies": {
     "@nestjs/cli": "^9.0.0",
-    "@nestjs/config": "^2.2.0",
+    "@nestjs/config": "^2.3.0",
     "@nestjs/schematics": "^9.0.0",
     "@nestjs/testing": "^9.0.0",
     "@types/cron": "^2.0.0",

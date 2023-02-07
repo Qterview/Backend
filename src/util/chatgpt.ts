@@ -4,7 +4,6 @@ import { Cron, CronExpression } from '@nestjs/schedule';
 import mongoose, { Model, startSession } from 'mongoose';
 import { Configuration, OpenAIApi } from 'openai';
 
-import { executablePath } from 'puppeteer';
 import { SocketGateway } from '../socket/socket.gateway';
 import { Post, PostDocument } from '../schemas/post.schema';
 import { Work, WorkDocument } from '../schemas/work.schema';

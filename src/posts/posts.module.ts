@@ -9,6 +9,7 @@ import { Work, WorkSchema } from '../schemas/work.schema.js';
 import { Work2, Work2Schema } from '../schemas/work2.schema.js';
 import { Like, LikeSchema } from '../schemas/like.schema.js';
 import { ChatGPT } from '../util/chatgpt.js';
+import { EventsGateway } from '../util/events/events.gateway.js';
 // import {Queue} from '../util/queue.js'
 
 @Module({
@@ -22,7 +23,7 @@ import { ChatGPT } from '../util/chatgpt.js';
     ]),
   ],
   controllers: [PostsController],
-  providers: [PostsService, ChatGPT],
+  providers: [PostsService, ChatGPT, EventsGateway],
   exports: [PostsService],
 })
 export class PostsModule {}

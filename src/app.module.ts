@@ -3,6 +3,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { PostsModule } from './posts/posts.module.js';
 import { MongooseModule } from '@nestjs/mongoose';
 import { ScheduleModule } from '@nestjs/schedule';
+import { EventsModule } from './util/events/events.module.js';
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { ScheduleModule } from '@nestjs/schedule';
     }),
     PostsModule,
     ScheduleModule.forRoot(),
+    EventsModule,
   ],
   controllers: [],
   providers: [],

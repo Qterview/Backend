@@ -7,6 +7,7 @@ import { executablePath } from 'puppeteer';
 import { Post, PostDocument } from '../schemas/post.schema';
 import { Work, WorkDocument } from '../schemas/work.schema';
 import { Work2, Work2Document } from '../schemas/work2.schema';
+import { EventsGateway } from './events/events.gateway';
 
 export const importDynamic = new Function(
   'modulePath',
@@ -31,6 +32,7 @@ export class ChatGPT {
     private workModel: Model<WorkDocument>,
     @InjectModel(Work2.name)
     private work2Model: Model<Work2Document>,
+    private socket: EventsGateway,
   ) {}
 
   async onModuleInit() {
@@ -54,6 +56,8 @@ export class ChatGPT {
       const openai_B = new OpenAIApi(configuration_B);
       this.gptApi_prod_A = openai_A;
       this.gptApi_prod_B = openai_B;
+      this.work_A(); //작업시작
+      this.work_B();
     } catch (e) {
       console.log(e.message);
     }
@@ -77,6 +81,7 @@ export class ChatGPT {
         nopechaKey: process.env.NOPECHAKEY,
       });
       this.logger.log('Initing session for ChatGPT Browser');
+
       if (api._browser) {
         console.log('브라우저 종료');
         await api._browser.disconnect();
@@ -120,6 +125,7 @@ export class ChatGPT {
           throw new Error(
             'API에 문제가 생겼습니다. API가 연결된 이후 자동 실행됩니다.',
           );
+
         //게시물 생성
         await this.postModel.create(
           [
@@ -137,6 +143,8 @@ export class ChatGPT {
         //트랜잭션 성공시 커밋후 세션 종료
         await session.commitTransaction();
         session.endSession();
+        const data = { msg: '알람입니다' };
+        this.socket.sendAlarm(data);
       } catch (e) {
         //실패시 롤백후 세션 종료
         await session.abortTransaction();
@@ -173,6 +181,7 @@ export class ChatGPT {
           throw new Error(
             'API에 문제가 생겼습니다. API가 연결된 이후 자동 실행됩니다.',
           );
+
         //게시물 생성
         await this.postModel.create(
           [
@@ -191,6 +200,7 @@ export class ChatGPT {
         //트랜잭션 성공시 커밋후 세션 종료
         await session.commitTransaction();
         session.endSession();
+        const data = { msg: '알람입니다' };
       } catch (e) {
         //실패시 롤백후 세션 종료
         await session.abortTransaction();

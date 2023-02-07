@@ -3,7 +3,6 @@ import { AppModule } from './app.module.js';
 import { HttpExceptionFilter } from './common/Exception.filter.js';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { ValidationPipe } from '@nestjs/common';
-import { WsAdapter } from '@nestjs/platform-ws';
 
 async function bootstrap() {
   // let configService = new ConfigService();

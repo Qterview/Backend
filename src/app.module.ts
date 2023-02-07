@@ -3,7 +3,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { PostsModule } from './posts/posts.module.js';
 import { MongooseModule } from '@nestjs/mongoose';
 import { ScheduleModule } from '@nestjs/schedule';
-import { EventsModule } from './util/events/events.module.js';
+import { SocketModule } from './socket/socket.module';
 
 @Module({
   imports: [
@@ -18,8 +18,8 @@ import { EventsModule } from './util/events/events.module.js';
       dbName: 'Qterview',
     }),
     PostsModule,
+    SocketModule,
     ScheduleModule.forRoot(),
-    EventsModule,
   ],
   controllers: [],
   providers: [],

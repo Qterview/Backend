@@ -3,11 +3,14 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Cron, CronExpression } from '@nestjs/schedule';
 import mongoose, { Model, startSession } from 'mongoose';
 import { Configuration, OpenAIApi } from 'openai';
+
 import { executablePath } from 'puppeteer';
+import { SocketGateway } from '../socket/socket.gateway';
 import { Post, PostDocument } from '../schemas/post.schema';
 import { Work, WorkDocument } from '../schemas/work.schema';
 import { Work2, Work2Document } from '../schemas/work2.schema';
-import { EventsGateway } from './events/events.gateway';
+
+
 
 export const importDynamic = new Function(
   'modulePath',
@@ -32,7 +35,8 @@ export class ChatGPT {
     private workModel: Model<WorkDocument>,
     @InjectModel(Work2.name)
     private work2Model: Model<Work2Document>,
-    private socket: EventsGateway,
+
+    private socketGateway: SocketGateway
   ) {}
 
   async onModuleInit() {
@@ -77,7 +81,7 @@ export class ChatGPT {
         password: process.env.OPENAI_PASSWORD,
         markdown: process.env.CHATGPT_MARKDOWN || false,
         minimize: process.env.CHATGPT_MINIMIZE || false,
-        executablePath: executablePath(),
+        // executablePath: executablePath(),
         nopechaKey: process.env.NOPECHAKEY,
       });
       this.logger.log('Initing session for ChatGPT Browser');
@@ -143,8 +147,7 @@ export class ChatGPT {
         //트랜잭션 성공시 커밋후 세션 종료
         await session.commitTransaction();
         session.endSession();
-        const data = { msg: '알람입니다' };
-        this.socket.sendAlarm(data);
+        this.socketGateway.alarmEvent({data : workData.work});
       } catch (e) {
         //실패시 롤백후 세션 종료
         await session.abortTransaction();
@@ -200,7 +203,7 @@ export class ChatGPT {
         //트랜잭션 성공시 커밋후 세션 종료
         await session.commitTransaction();
         session.endSession();
-        const data = { msg: '알람입니다' };
+        this.socketGateway.alarmEvent({data : workData.work});
       } catch (e) {
         //실패시 롤백후 세션 종료
         await session.abortTransaction();

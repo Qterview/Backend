@@ -122,10 +122,12 @@ export class ChatGPT {
         //chatGPT 메세지 요청
         const result = await this.sendMessage(workData.work);
 
-        if (!result)
-          throw new Error(
-            'API에 문제가 생겼습니다. API가 연결된 이후 자동 실행됩니다.',
-          );
+        if (!result) {
+          const msg =
+            'API에 문제가 생겼습니다. API가 연결된 이후 자동 실행됩니다.';
+          this.socketGateway.alarmEvent({ msg: msg });
+          throw new Error(msg);
+        }
 
         //게시물 생성
         const data = await this.postModel.create(
@@ -178,10 +180,12 @@ export class ChatGPT {
 
         //chatGPT 메세지 요청
         const result = await this.sendMessage(workData.work);
-        if (!result)
-          throw new Error(
-            'API에 문제가 생겼습니다. API가 연결된 이후 자동 실행됩니다.',
-          );
+        if (!result) {
+          const msg =
+            'API에 문제가 생겼습니다. API가 연결된 이후 자동 실행됩니다.';
+          this.socketGateway.alarmEvent({ msg: msg });
+          throw new Error(msg);
+        }
 
         //게시물 생성
         const data = await this.postModel.create(
@@ -195,7 +199,7 @@ export class ChatGPT {
           { session },
         );
         const postId = data[0]._id.toString();
-        console.log(postId)
+        console.log(postId);
 
         //작업삭제
         await this.work2Model.deleteOne({ _id: workData._id }, { session });

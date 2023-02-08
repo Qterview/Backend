@@ -101,6 +101,7 @@ export class PostsService {
           _id: 1,
           title: 1,
           useful: 1,
+          createdAt: 1,
           score: { $meta: 'searchScore' },
         },
       },

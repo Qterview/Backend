@@ -194,7 +194,8 @@ export class ChatGPT {
           ],
           { session },
         );
-        const postId = data[0]._id;
+        const postId = data[0]._id.toString();
+        console.log(postId)
 
         //작업삭제
         await this.work2Model.deleteOne({ _id: workData._id }, { session });

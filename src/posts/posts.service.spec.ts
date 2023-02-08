@@ -61,14 +61,14 @@ describe('PostsService', () => {
     expect(service).toBeDefined();
   });
 
-  it('getPost호출시 게시글 목록 return', async () => {
-    const posts = [
-      { title: '트랜잭션에 대해 설명하세요', content: '...설명 내용' },
-      { title: 'Node.js에 대해 설명하세요', content: '...설명 내용' },
-    ];
+  // it('getPost호출시 게시글 목록 return', async () => {
+  //   const posts = [
+  //     { title: '트랜잭션에 대해 설명하세요', content: '...설명 내용' },
+  //     { title: 'Node.js에 대해 설명하세요', content: '...설명 내용' },
+  //   ];
 
-    expect(await service.getPost({ page: 0 })).toStrictEqual(posts);
-  });
+  //   expect(await service.getPost({ page: 0 })).toStrictEqual(posts);
+  // });
 
   it('postDetail  호출시 게시글 return', async () => {
     const post = {

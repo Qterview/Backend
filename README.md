@@ -2,7 +2,6 @@
 
 
 ><br/>
->**[📎 Frontend]()**<br/>
 
 >**[📎 Frontend](https://github.com/Qterview/front-vue)**<br/>
 ><br/>

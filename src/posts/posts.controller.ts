@@ -52,9 +52,10 @@ export class PostsController {
     type: GetPostDto,
     isArray: true,
   })
-  @Get('search')
-  search(@Param() data: SearchDto): Promise<GetPostDto[]> {
-    return this.postsService.search(data);
+  @Get('search/:data')
+  search(@Param() searchDto: SearchDto): Promise<GetPostDto[]> {
+    const search = searchDto.data
+    return this.postsService.search(search);
   }
 
   @ApiOperation({ summary: '게시물 상세조회' })

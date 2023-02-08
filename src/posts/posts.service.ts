@@ -75,7 +75,8 @@ export class PostsService {
    * @param {SearchDto} data 검색할 데이터
    * @returns 검색 결과 게시물 리스트
    */
-  async search(search: string): Promise<GetPostDto[]> {
+  async search(data: SearchDto): Promise<GetPostDto[]> {
+    const search = data.data
     const posts = await this.postModel.aggregate([
       {
         $search: {

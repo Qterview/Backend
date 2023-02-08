@@ -125,7 +125,7 @@ export class ChatGPT {
         if (!result) {
           const msg =
             'API에 문제가 생겼습니다. API가 연결된 이후 자동 실행됩니다.';
-          this.socketGateway.errorEvent({ msg: msg });
+          this.socketGateway.errorEvent({ title: workData.work });
           throw new Error(msg);
         }
 
@@ -183,7 +183,7 @@ export class ChatGPT {
         if (!result) {
           const msg =
             'API에 문제가 생겼습니다. API가 연결된 이후 자동 실행됩니다.';
-          this.socketGateway.errorEvent({ msg: msg });
+          this.socketGateway.errorEvent({ title: workData.work });
           throw new Error(msg);
         }
 

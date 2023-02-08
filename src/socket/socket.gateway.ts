@@ -28,9 +28,4 @@ export class SocketGateway {
     console.log('소켓으로 보는 데이터:', data);
     this.server.emit('alarm', data);
   }
-
-  @SubscribeMessage('error')
-  errorEvent(data: {}) {
-    this.server.emit('error', data);
-  }
 }

@@ -2,9 +2,9 @@
 
 
 ><br/>
->**[📎 Frontend](https://github.com/Qterview/front-vue)**<br/>
+>**[📎 Frontend]()**<br/>
 
->**[📎 Frontend](https://github.com/gomin-solution/Frontend)**<br/>
+>**[📎 Frontend](https://github.com/Qterview/front-vue)**<br/>
 ><br/>
 
 

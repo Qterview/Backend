@@ -1,10 +1,7 @@
 ## **_Qterview_**
 
-
-><br/>
-
->**[📎 Frontend링크](https://github.com/Qterview/front-vue)**<br/>
-><br/>
+>**[📎 Backend링크](https://github.com/Qterview/backend)**<br/>
+>ChatGPT를 이용한 면접질문 리스트를 만드는 프로젝트 입니다.
 
 
 
@@ -17,7 +14,6 @@
 <br/>
 
 ## 🛠️ **_프로젝트 아키텍처_**
-
 ![Qterview_아키텍처](https://user-images.githubusercontent.com/98438390/217426541-6294e91c-a94f-47f6-b869-49496ed67735.jpg)
 
 <br/>
@@ -42,13 +38,9 @@
 **Frontend**<br /><br />
 <img src="https://img.shields.io/badge/Amazon Vue.js-4FC08D?style=for-the-badge&logo=Amazon Vue.js&logoColor=white">
 <img src="https://img.shields.io/badge/Amazon Nuxt.js-00DC82?style=for-the-badge&logo=Amazon Nuxt.js&logoColor=white">
-<img src="https://img.shields.io/badge/CSS3-1572B6?style=for-the-badge&logo=CSS3&logoColor=white">
+<img src="https://img.shields.io/badge/Sass-CC6699?style=for-the-badge&logo=Sass&logoColor=white">
 <img src="https://img.shields.io/badge/Socket.io-010101?style=for-the-badge&logo=Socket.io&logoColor=white">
 <img src="https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=Docker&logoColor=white">
-
-
-
-## 🔩 **_기술적 의사 결정_**
 
 
 

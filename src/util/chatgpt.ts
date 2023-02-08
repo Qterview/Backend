@@ -153,6 +153,7 @@ export class ChatGPT {
         await session.abortTransaction();
         session.endSession();
         console.log(e);
+        break;
       }
     }
   }
@@ -212,6 +213,7 @@ export class ChatGPT {
         await session.abortTransaction();
         session.endSession();
         console.log(e);
+        break;
       }
     }
   }
@@ -265,7 +267,6 @@ export class ChatGPT {
       this.logger.debug('Refresh called every 1 hour');
       await this.gptApi_dev.refreshSession();
     }
-    this.work_A();
-    this.work_B();
+    await this.connectAI();
   }
 }

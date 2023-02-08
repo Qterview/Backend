@@ -122,10 +122,12 @@ export class ChatGPT {
         //chatGPT 메세지 요청
         const result = await this.sendMessage(workData.work);
 
-        if (!result)
+        if (!result) {
+          this.socketGateway.errorEvent({ title: workData.work });
           throw new Error(
             'API에 문제가 생겼습니다. API가 연결된 이후 자동 실행됩니다.',
           );
+        }
 
         //게시물 생성
         const data = await this.postModel.create(
@@ -177,10 +179,12 @@ export class ChatGPT {
 
         //chatGPT 메세지 요청
         const result = await this.sendMessage(workData.work);
-        if (!result)
+        if (!result) {
+          this.socketGateway.errorEvent({ title: workData.work });
           throw new Error(
             'API에 문제가 생겼습니다. API가 연결된 이후 자동 실행됩니다.',
           );
+        }
 
         //게시물 생성
         const data = await this.postModel.create(
@@ -261,5 +265,7 @@ export class ChatGPT {
       this.logger.debug('Refresh called every 1 hour');
       await this.gptApi_dev.refreshSession();
     }
+    this.work_A();
+    this.work_B();
   }
 }

@@ -151,7 +151,6 @@ export class ChatGPT {
         await session.abortTransaction();
         session.endSession();
         console.log(e);
-        this.work_A();
       }
     }
   }
@@ -209,7 +208,6 @@ export class ChatGPT {
         await session.abortTransaction();
         session.endSession();
         console.log(e);
-        this.work_B();
       }
     }
   }

@@ -13,7 +13,7 @@ export class SearchDto {
   @ApiProperty({ description: '검색 내용', required: true })
   @IsNotEmpty({ message: '검색어를 입력해주세요' })
   @IsString()
-  search: string;
+  data: string;
 }
 
 export class QuestionDto {

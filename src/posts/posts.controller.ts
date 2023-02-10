@@ -52,7 +52,7 @@ export class PostsController {
     type: GetPostDto,
     isArray: true,
   })
-  @Get('search')
+  @Get('search/:data')
   search(@Param() data: SearchDto): Promise<GetPostDto[]> {
     return this.postsService.search(data);
   }

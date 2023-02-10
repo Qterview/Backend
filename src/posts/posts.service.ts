@@ -67,7 +67,7 @@ export class PostsService {
     const postId = param.id;
     const post = await this.postModel
       .findById(postId)
-      .select({ title: 1, content: 1, useful: 1 });
+      .select({ title: 1, content: 1, useful: 1, updatedAt: 1 });
     return post;
   }
 
@@ -76,8 +76,7 @@ export class PostsService {
    * @returns 검색 결과 게시물 리스트
    */
   async search(data: SearchDto): Promise<GetPostDto[]> {
-    const search = data.search;
-    console.log(search);
+    const search = data.data;
     const posts = await this.postModel.aggregate([
       {
         $search: {
@@ -101,7 +100,6 @@ export class PostsService {
           _id: 1,
           title: 1,
           useful: 1,
-          createdAt: 1,
           score: { $meta: 'searchScore' },
         },
       },

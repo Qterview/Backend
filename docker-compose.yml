@@ -25,7 +25,7 @@ services:
     image: pyo00/qterview:version3
     restart: always
     ports:
-      - 30001:3001
+      - 3001:3001
     environment:
       DB_HOST: '${DB_HOST}'
       DB_PORT: '${DB_PORT}'
@@ -42,24 +42,24 @@ services:
       CERT: '${CERT}'
       BUILD_ENV: '${BUILD_ENV}'
 
-  nginx:
-    image: nginx:latest
-    restart: always
-    volumes:
-      - ./conf/nginx:/etc/nginx/conf.d
-      - ./data/certbot/conf:/etc/letsencrypt
-      - ./data/certbot/www:/var/www/certbot
-    ports:
-      - '80:80'
-      - '443:443'
-    #아래 명령어는 ssl인증 이후 적용해야 합니다. 자동갱신 명령입니다.
-    #command: "/bin/sh -c 'while :; do sleep 6h & wait $${!}; nginx -s reload; done & nginx -g \"daemon off;\"'"
-  certbot:
-    depends_on:
-      - nginx
-    image: certbot/certbot
-    volumes:
-      - ./data/certbot/conf:/etc/letsencrypt
-      - ./data/certbot/www:/var/www/certbot
-    #아래 명령어는 ssl인증 이후 적용해야 합니다. 자동갱신 명령입니다.
-    #entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
+  # nginx:
+  #   image: nginx:latest
+  #   restart: always
+  #   volumes:
+  #     - ./conf/nginx:/etc/nginx/conf.d
+  #     - ./data/certbot/conf:/etc/letsencrypt
+  #     - ./data/certbot/www:/var/www/certbot
+  #   ports:
+  #     - '80:80'
+  #     - '443:443'
+  #   #아래 명령어는 ssl인증 이후 적용해야 합니다. 자동갱신 명령입니다.
+  #   #command: "/bin/sh -c 'while :; do sleep 6h & wait $${!}; nginx -s reload; done & nginx -g \"daemon off;\"'"
+  # certbot:
+  #   depends_on:
+  #     - nginx
+  #   image: certbot/certbot
+  #   volumes:
+  #     - ./data/certbot/conf:/etc/letsencrypt
+  #     - ./data/certbot/www:/var/www/certbot
+  #   #아래 명령어는 ssl인증 이후 적용해야 합니다. 자동갱신 명령입니다.
+  #   #entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"

@@ -1,9 +1,8 @@
 ## **_Qterview_**
-
->**[📎 Frontend링크](https://github.com/Qterview/front-vue)**<br/>
->ChatGPT를 이용한 면접질문 리스트를 만드는 프로젝트 입니다.
-
-
+>ChatGPT를 이용한 면접질문 리스트를 만드는 프로젝트 입니다.<br/><br/>
+>**[📎 노션](https://flawless-earwig-06e.notion.site/Qterview-769fac71b5ae4fa3b869c448e9679af2)**<br/><br/>
+>**[📎 Frontend링크](https://github.com/Qterview/front-vue)**<br/><br/>
+>**[📎 시연영상링크](https://youtu.be/rMbDAtmmTZk)**<br/><br/>
 
 <br/>
 

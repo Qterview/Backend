@@ -13,7 +13,8 @@
 <br/>
 
 ## 🛠️ **_프로젝트 아키텍처_**
-<img width="1000" alt="qterview아키텍쳐" src="https://user-images.githubusercontent.com/98438390/218459551-6a22b099-c31a-4af0-94f5-1f8eff4a16dd.png">
+![Qterview아키텍처](https://user-images.githubusercontent.com/98438390/218460483-206e3585-b6dd-40e2-b8a5-737241f5d170.png)
+
 
 
 <br/>

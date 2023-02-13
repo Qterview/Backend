@@ -13,7 +13,8 @@
 <br/>
 
 ## 🛠️ **_프로젝트 아키텍처_**
-![Qterview아키텍처](https://user-images.githubusercontent.com/98438390/217975114-031c6f38-d0a4-441b-af29-b41f5301bc4b.jpg)
+<img width="1000" alt="qterview아키텍쳐" src="https://user-images.githubusercontent.com/98438390/218459551-6a22b099-c31a-4af0-94f5-1f8eff4a16dd.png">
+
 
 <br/>
 
@@ -58,7 +59,7 @@
 
 **<details><summary>EC2 인스턴스에 도커 이미지 누적 문제</summary>**
 
-❗**문제**:인스턴스의 용량 부족 현상이 발생하여 자동배포에 실패하는 이슈 발생.<br/>
+❗**문제**: 인스턴스의 용량 부족 현상이 발생하여 자동배포에 실패하는 이슈 발생.<br/>
 <br/>
 ❓**원인**: `docker system df`를 통해 도커 디스크 사용량을 확인해 보니 미사용 Docker이미지가 누적되어 발생한 현상임을 알게됨.<br/>
 <br/>
